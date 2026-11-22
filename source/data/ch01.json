@@ -1,0 +1,508 @@
+{
+"id": "ch01",
+"num": "CH01",
+"title": "Declarative Resource Management",
+"zh": "宣告式 Resource 管理",
+"q": [
+{
+"q": "Which management approach does Red Hat recommend for production workloads on OpenShift?",
+"o": [
+"Declarative management with resource manifests",
+"Imperative management with individual oc create commands",
+"Editing live resources directly in the web console",
+"Running a shell script of oc set commands"
+],
+"e": "簡報指出宣告式是正式環境的建議做法。Manifest 以 YAML 或 JSON 描述期望狀態，可放進版本控制、精確重現，並支援 GitOps；命令式則難以重現、沒有版本控制。"
+},
+{
+"q": "What is a key disadvantage of the imperative workflow for production environments?",
+"o": [
+"You must track and maintain a series of commands to reflect the desired state, which is hard to reproduce",
+"It cannot create Deployments",
+"It always requires cluster-admin privileges",
+"It does not report any error messages"
+],
+"e": "命令式一次設定一個 Resource，長 Command-line 與零散的部署流程必須逐一追蹤維護，難以重現、沒有版本控制，也不支援 GitOps。它其實會針對元件回報明確的錯誤訊息，這反而是它適合開發測試的優點。"
+},
+{
+"q": "Why is the imperative workflow considered useful during development and experimentation?",
+"o": [
+"You can build one component at a time and test each step, with error messages specific to that component",
+"It automatically stores every change in Git",
+"It supports GitOps out of the box",
+"It applies Kustomize overlays automatically"
+],
+"e": "命令式的好處是一個元件一個元件地建，每加一個就能測試，OpenShift 針對該元件回報明確的錯誤，像用除錯器逐行執行。"
+},
+{
+"q": "In the MariaDB example, why does the db-pod Deployment fail to start after 'oc create deployment db-pod --port 3306 --image ...'?",
+"o": [
+"Required environment variables such as MYSQL_USER and MYSQL_PASSWORD are missing",
+"Port 3306 is reserved by OpenShift",
+"The image registry is unreachable",
+"Deployments cannot specify a port"
+],
+"e": "範例中 Pod 因缺少 Environment Variables 而無法啟動，所以接著用 oc set env 補上 MYSQL_USER、MYSQL_PASSWORD 與 MYSQL_DATABASE。"
+},
+{
+"q": "Which option makes 'oc create deployment' output a YAML template without creating the resource on the cluster?",
+"o": [
+"--dry-run=client",
+"--save-config",
+"--validate=true",
+"--dry-run=server"
+],
+"e": "--dry-run=client 不在 Cluster 建立 Resource，只在本機輸出 YAML 範本；搭配 -o yaml 可導向檔案作為 Manifest 的起點。--dry-run=server 會把請求送到 Server。"
+},
+{
+"q": "What does the --save-config option do when used with oc create?",
+"o": [
+"Stores the configuration in the kubectl.kubernetes.io/last-applied-configuration annotation for later use by oc apply",
+"Saves the YAML to the local home directory",
+"Commits the manifest to a Git repository",
+"Creates a ConfigMap with the deployment settings"
+],
+"e": "--save-config 會把設定存入 last-applied-configuration Annotation，之後 oc apply 比對三個來源時就會用到它。"
+},
+{
+"q": "Which command shows the documentation for a specific resource field, such as a Deployment's spec.replicas?",
+"o": [
+"oc explain deployment.spec.replicas",
+"oc describe deployment.spec.replicas",
+"oc get deployment --help-field replicas",
+"oc diff deployment.spec.replicas"
+],
+"e": "簡報提到 oc explain RESOURCE.FIELD 可查詢任一欄位的說明，適合撰寫 Manifest 時確認欄位用途。"
+},
+{
+"q": "How can multiple resource manifests be stored in a single YAML file?",
+"o": [
+"Separate each manifest with a line containing ---",
+"Separate each manifest with a blank line",
+"Wrap all manifests in a JSON array only",
+"It is not possible; each resource needs its own file"
+],
+"e": "多個 Manifest 可放在同一個 YAML 檔，以 --- 分隔，例如一份 Deployment 加一份 Service。單檔或多檔只是組織上的偏好。"
+},
+{
+"q": "Which option lets oc create -f process files in subdirectories of the specified directory?",
+"o": [
+"-R",
+"-k",
+"--all",
+"-r"
+],
+"e": "-R 選項會遞迴處理子目錄中的檔案。範例中 oc create -R -f ~/my-app 一次建立了根目錄的 Deployment 與 service 子目錄的 Service。-k 是 Kustomize 用的選項。"
+},
+{
+"q": "What happens when you run 'oc create -f' for a resource that already exists?",
+"o": [
+"The command reports an error",
+"The existing resource is updated to match the file",
+"The existing resource is deleted and recreated",
+"The command silently does nothing and exits successfully"
+],
+"e": "oc create -f 屬命令式，資源已存在時會回報錯誤；oc apply -f 則會比較現況與 Manifest，更新差異。"
+},
+{
+"q": "Which statement best describes 'oc apply -f'?",
+"o": [
+"It is declarative: it creates resources that do not exist and updates existing ones to match the manifest",
+"It only creates new resources and fails if they exist",
+"It only deletes resources that are not in the manifest",
+"It is identical to oc replace --force"
+],
+"e": "oc apply 是宣告式，會比較 Manifest 與 Cluster 現況，既能建立也能更新資源，因此適合持續維護的應用程式。"
+},
+{
+"q": "Which three sources does oc apply compare to decide how to update a resource?",
+"o": [
+"The manifest file, the live resource configuration, and the last-applied-configuration annotation",
+"The manifest file, the Git history, and the etcd backup",
+"The live resource, the cluster version, and the image digest",
+"The kubeconfig file, the manifest file, and the project template"
+],
+"e": "oc apply 同時比較 Manifest (期望狀態)、Cluster 裡的 Live 設定，以及存在 Annotation 中的上次套用內容，而不是單純覆蓋 Live Resource。"
+},
+{
+"q": "A field exists in the last-applied-configuration annotation but has been removed from the manifest. What does oc apply do?",
+"o": [
+"Removes the field from the live configuration",
+"Keeps the field unchanged in the live configuration",
+"Fails with a conflict error",
+"Adds the field back to the manifest file"
+],
+"e": "上次套用的內容有、但 Manifest 已經沒有的欄位，oc apply 會把它從 Live 設定移除，完成後再更新 Annotation 供下次比對。"
+},
+{
+"q": "What does 'oc apply --dry-run=server' do?",
+"o": [
+"Sends the request to the server to check it against current server policies without creating the resource",
+"Only prints the object locally without contacting the server",
+"Creates the resource and then immediately deletes it",
+"Validates YAML indentation only"
+],
+"e": "--dry-run=server 會把請求送到 Server，確認符合目前的政策，但不建立 Resource。"
+},
+{
+"q": "Why can a manifest pass '--dry-run=client' but still be rejected by the cluster?",
+"o": [
+"Client dry-run only outputs the object that would be sent; it does not check it against server policies",
+"Client dry-run uses an older API version",
+"Client dry-run removes all labels",
+"Client dry-run requires cluster-admin rights"
+],
+"e": "--dry-run=client 只輸出將送往 Server 的物件，YAML 語法正確仍可能被 Cluster 拒絕，因此正式套用前建議用 --dry-run=server。"
+},
+{
+"q": "What does '--validate=true' do when applying a manifest?",
+"o": [
+"Validates the input against the schema and fails the request if it is invalid",
+"Validates that the image exists in the registry",
+"Validates the user's RBAC permissions only",
+"Validates network connectivity to the API server"
+],
+"e": "--validate=true 以 Schema 驗證輸入，無效時讓請求失敗。簡報建議與 --dry-run=server 一起使用。"
+},
+{
+"q": "Compared to a generic text diff tool, what is an advantage of 'oc diff -f FILE'?",
+"o": [
+"It shows only differences that have a material effect on the cluster and masks Secret values",
+"It shows every whitespace change in the file",
+"It automatically applies the changes",
+"It compares two local files without contacting the cluster"
+],
+"e": "oc diff 只顯示對 Cluster 有實質影響的差異 (例如 generation 由 1 變 2、Image Tag 變更)，雜訊少，而且會遮蔽 Secret 的值。"
+},
+{
+"q": "How do GitOps tools use oc diff?",
+"o": [
+"To detect whether someone changed a resource outside of the GitOps workflow",
+"To render Helm templates",
+"To encrypt Secrets before committing",
+"To generate Kustomize overlays"
+],
+"e": "簡報指出 GitOps 工具依賴 oc diff 判斷是否有人在 GitOps 流程之外變更了 Resource。"
+},
+{
+"q": "You update a Secret with oc apply, but the Deployment that uses it is unchanged. What happens to the running pods?",
+"o": [
+"They keep using the old Secret values because pods read Secrets only at startup",
+"They restart automatically within one minute",
+"They are deleted and not recreated",
+"They receive the new values immediately through the API"
+],
+"e": "Deployment 本身沒有變更就不會產生新 Pod；Pod 只在啟動時讀取 Secret 與 ConfigMap，所以會繼續使用舊值。"
+},
+{
+"q": "In the guided exercise version v1.1.1, why does the exoplanets pod enter CrashLoopBackOff?",
+"o": [
+"The database Deployment did not restart, so it still used the old Secret values while exoplanets used the new ones",
+"The exoplanets image tag does not exist",
+"The route was deleted",
+"The project quota was exceeded"
+],
+"e": "v1.1.1 同時改了 Image 與兩個 Secret。exoplanets 的 Deployment 改變所以重建 Pod，但 database Deployment 沒變而未重啟，兩邊設定不一致，exoplanets 因此 CrashLoopBackOff。"
+},
+{
+"q": "Which command fixes pods that still use outdated Secret values, with minimal downtime for multiple replicas?",
+"o": [
+"oc rollout restart deployment/NAME",
+"oc delete project NAME",
+"oc scale deployment/NAME --replicas=0",
+"oc apply -f . --force"
+],
+"e": "對 Deployment 執行滾動重啟，Pod 會逐步停止與取代，停機時間最少。單一 Replica 時也可直接刪除 Pod，但多 Replica 建議滾動重啟。"
+},
+{
+"q": "What does 'oc patch' do?",
+"o": [
+"Updates or adds fields of an existing object based on a JSON or YAML snippet or file",
+"Replaces the entire object with a new manifest",
+"Creates a new object from a template",
+"Rolls back a Deployment to the previous revision"
+],
+"e": "oc patch 依據 JSON 或 YAML 的片段或檔案，更新或新增既有物件的欄位，只修改指定的欄位，而且可以重複執行。"
+},
+{
+"q": "Which oc patch option supplies the patch content from a YAML file?",
+"o": [
+"--patch-file",
+"-f",
+"--from-file",
+"-k"
+],
+"e": "--patch-file 指定 YAML 修補檔的位置；-p 則直接在 Command-line 帶入 JSON 片段。"
+},
+{
+"q": "What does this command do? oc patch deployment hello -p '{\"spec\":{\"template\":{\"spec\":{\"containers\":[{\"name\":\"hello-rhel10\",\"resources\":{\"requests\":{\"cpu\":\"100m\"}}}]}}}}'",
+"o": [
+"Sets the CPU request of the hello-rhel10 container to 100m",
+"Sets the CPU limit of the deployment to 100 cores",
+"Scales the deployment to 100 replicas",
+"Creates a new container named hello-rhel10 with 100 MiB of memory"
+],
+"e": "這是以 -p 帶入 JSON 片段的範例，把 hello Deployment 中 hello-rhel10 Container 的 CPU request 設為 100m (100 millicore)。"
+},
+{
+"q": "A patch file adds a volumeMount that may or may not already exist in the Deployment. How does oc patch behave?",
+"o": [
+"It adds the field if it does not exist and modifies it if it does",
+"It fails if the field already exists",
+"It fails if the field does not exist",
+"It duplicates the field"
+],
+"e": "oc patch 的套用行為是欄位不存在則新增、已存在則修改，所以無論 Deployment 是否已有該 Volume Mount 都能執行。"
+},
+{
+"q": "In the PVC patch example, what changes after patching the hello Deployment's www volume?",
+"o": [
+"The claim changes from deprecated-www to nginx-www and the mount path changes to the nginx html directory",
+"A second volume named www-2 is added",
+"The tls-conf ConfigMap mount is removed",
+"The Deployment is converted to a StatefulSet"
+],
+"e": "套用修補檔後，同一個 www Volume 的 claim 改為 nginx-www，Mount 路徑改為 /usr/share/nginx/html/；tls-conf ConfigMap 的 Mount 完全不受影響。"
+},
+{
+"q": "What is Kustomize?",
+"o": [
+"A declarative configuration management tool that customizes base YAML through overlays without modifying the original files",
+"A package manager that installs charts from repositories",
+"An imperative CLI that replaces oc",
+"A web console plug-in for editing YAML"
+],
+"e": "Kustomize 是宣告式設定管理工具，保留原始 base YAML，以 overlay 套用各環境差異而不修改原檔。oc 與 kubectl 都已整合 Kustomize。"
+},
+{
+"q": "What file must exist in a directory for Kustomize to process it?",
+"o": [
+"kustomization.yaml",
+"Chart.yaml",
+"values.yaml",
+"template.yaml"
+],
+"e": "Kustomize 以含 kustomization.yaml 的目錄運作。Chart.yaml 與 values.yaml 是 Helm Chart 的檔案。"
+},
+{
+"q": "In a Kustomize layout, what is the role of an overlay directory?",
+"o": [
+"It points to one or more bases and applies environment-specific patches and settings",
+"It stores the shared resources used by every environment",
+"It contains the compiled container images",
+"It stores Helm release secrets"
+],
+"e": "overlay 目錄有自己的 kustomization.yaml，指向一個或多個 base，用 patch 覆寫該環境的設定；共用的 Resource 放在 base。"
+},
+{
+"q": "In a base kustomization.yaml, which field lists the resource files to include?",
+"o": [
+"resources",
+"patches",
+"bases",
+"files"
+],
+"e": "base 的 kustomization.yaml 以 resources 列出所有資源檔 (configmap.yaml、deployment.yaml 等)；overlay 也用 resources 指向 ../../base。"
+},
+{
+"q": "An overlay kustomization.yaml sets 'namespace: dev-env'. What is the effect?",
+"o": [
+"All resources are set to the dev-env namespace",
+"Only Deployments are created in dev-env",
+"The base directory is renamed to dev-env",
+"A new project template named dev-env is created"
+],
+"e": "namespace 欄位為所有 Resource 設定指定的 Namespace，使該 overlay 的資源全部建立在 dev-env。"
+},
+{
+"q": "Which Kustomize field adds a prefix to the names of all resources?",
+"o": [
+"namePrefix",
+"nameSuffix",
+"commonAnnotations",
+"labels"
+],
+"e": "namePrefix 為所有 Resource 名稱加前綴，nameSuffix 加後綴；labels 與 commonAnnotations 則加 Label 與 Annotation。"
+},
+{
+"q": "Which Kustomize field is deprecated and should be replaced by 'labels' with 'pairs'?",
+"o": [
+"commonLabels",
+"commonAnnotations",
+"namePrefix",
+"resources"
+],
+"e": "commonLabels 為已棄用欄位，新檔案應改用 labels 搭配 pairs 設定 Label。"
+},
+{
+"q": "Where is the 'kustomize edit fix' command available?",
+"o": [
+"Only in the standalone kustomize program; oc and kubectl do not include it",
+"In oc but not kubectl",
+"In both oc and kubectl",
+"Only in the OpenShift web console"
+],
+"e": "簡報指出 kustomize edit fix 僅限獨立的 kustomize 程式，oc 與 kubectl 未整合此功能。"
+},
+{
+"q": "What two elements make up an entry in the Kustomize 'patches' field?",
+"o": [
+"patch and target",
+"op and value",
+"base and overlay",
+"source and destination"
+],
+"e": "patches 機制由 patch 與 target 組成：patch 描述修改內容，target 指定要套用的資源 (例如 kind: Deployment、name: frontend)。"
+},
+{
+"q": "Which patch format uses 'op', 'path', and 'value' to describe individual operations?",
+"o": [
+"JSON Patch",
+"Strategic merge patch",
+"Helm values override",
+"Template parameter file"
+],
+"e": "JSON Patch 以操作類型、路徑與值指定個別操作，例如 op: replace、path: /spec/replicas、value: 15。"
+},
+{
+"q": "Which patch format uses the same YAML structure as the target resource and merges the specified fields?",
+"o": [
+"Strategic merge patch",
+"JSON Patch",
+"Kustomize generator",
+"oc process parameter file"
+],
+"e": "Strategic Merge Patch 使用與目標資源相同的 YAML 結構合併欄位，例如 production 範例的 patch.yaml 把名稱改為 frontend-prod、replicas 改為 5。"
+},
+{
+"q": "The production overlay patch changes the Deployment name to frontend-prod. Which option must be set in the patch entry?",
+"o": [
+"allowNameChange: true",
+"disableNameSuffixHash: true",
+"namePrefix: prod-",
+"allowKindChange: true"
+],
+"e": "因為 patch 要變更資源名稱，所以 options 須設定 allowNameChange: true。"
+},
+{
+"q": "In Kustomize v5, which older fields are deprecated and replaced by 'patches'?",
+"o": [
+"patchesJson6902 and patchesStrategicMerge",
+"resources and bases",
+"configMapGenerator and secretGenerator",
+"namespace and namePrefix"
+],
+"e": "舊的 PatchesJson6902 與 PatchesStrategicMerge 在 Kustomize 第五版已棄用，統一由 patches 取代，但內容格式沿用。"
+},
+{
+"q": "Which command renders the final manifests of a kustomization without applying them to the cluster?",
+"o": [
+"oc kustomize DIR",
+"oc apply -k DIR",
+"oc create -k DIR",
+"oc diff -R DIR"
+],
+"e": "oc kustomize DIR 渲染並輸出最終 Manifest，不套用到 Cluster，可先確認名稱、Replica 數與 Label 是否正確。"
+},
+{
+"q": "Which command validates a rendered kustomization against the cluster without creating resources?",
+"o": [
+"oc apply -k DIR --dry-run=server",
+"oc kustomize DIR --validate",
+"oc apply -f DIR --dry-run=client",
+"oc process -k DIR"
+],
+"e": "oc apply -k DIR --dry-run=server 會向 Cluster 驗證渲染結果，但不建立 Resource。"
+},
+{
+"q": "Which command deletes the resources that were deployed by a kustomization?",
+"o": [
+"oc delete -k DIR",
+"oc delete -f kustomization.yaml",
+"oc kustomize DIR --delete",
+"oc rollout undo -k DIR"
+],
+"e": "oc delete -k DIR 會刪除由 Kustomize 部署的 Resource，包含 ConfigMap、Secret、Service 與 Deployment。"
+},
+{
+"q": "Why do configMapGenerator and secretGenerator append a hash to the generated resource name?",
+"o": [
+"When the content changes, the name changes, so the referencing Deployment changes and triggers a rolling update",
+"To encrypt the data",
+"To make the name unique across all clusters",
+"To prevent the resource from being deleted"
+],
+"e": "Generator 在名稱後加 hash，內容一變 hash 就變，Deployment 參照的名稱隨之改變，因此觸發 Rolling Update，不需手動重啟。"
+},
+{
+"q": "In a configMapGenerator, what does the 'files' source produce?",
+"o": [
+"The whole file becomes a single key, such as application.properties",
+"Each line of the file becomes a separate key",
+"The file is mounted as a volume automatically",
+"The file is base64-encoded into a Secret"
+],
+"e": "files 會把整個檔案內容放成一個 key；envs 才是把環境檔中每個變數變成獨立的 key。"
+},
+{
+"q": "In a configMapGenerator, what does the 'envs' source produce?",
+"o": [
+"Each variable in the env file becomes a separate key",
+"The whole env file becomes one key",
+"Environment variables are injected into every pod",
+"A Secret instead of a ConfigMap"
+],
+"e": "envs 會把環境檔中每一個變數變成獨立的 key；literals 則直接以 key=value 指定內容。"
+},
+{
+"q": "What does secretGenerator do in addition to what configMapGenerator does?",
+"o": [
+"Performs the base64 encoding that Secrets require",
+"Encrypts the data with a cluster key",
+"Stores the data in an external vault",
+"Creates a service account"
+],
+"e": "secretGenerator 用法與 configMapGenerator 相同，另外會處理 Secret 所需的 base64 編碼。"
+},
+{
+"q": "When is it appropriate to set 'disableNameSuffixHash: true' in generatorOptions?",
+"o": [
+"When a component, such as the OpenShift OAuth operator, applies changes to the Secret by itself",
+"When you want every change to trigger a rollout",
+"When the ConfigMap is larger than 1 MiB",
+"When using JSON Patch"
+],
+"e": "預設附加 hash 以觸發 Rollout；但像 OpenShift OAuth Operator 會自動套用 htpasswd Secret 的變更，這時可在 generatorOptions 停用 hash 後綴。"
+},
+{
+"q": "Besides disabling the name hash, what else can generatorOptions set on generated resources?",
+"o": [
+"Labels and annotations",
+"Replica counts",
+"Image tags",
+"Resource quotas"
+],
+"e": "generatorOptions 可停用 hash 後綴，並替產生的資源加上 labels 與 annotations。"
+},
+{
+"q": "In the Kustomize guided exercise, what happens when DB_PASSWORD changes to newpassword in version v1.1.2?",
+"o": [
+"Kustomize creates a new db-secrets Secret and both Deployments switch to it",
+"The existing Secret is edited and the pods keep the old value",
+"The application fails with CrashLoopBackOff",
+"The production overlay is deleted"
+],
+"e": "因為使用 secretGenerator，內容改變就產生新的 db-secrets (新 hash)，兩個 Deployment 改用新 Secret 並重新部署，應用程式維持正常，不需手動重啟。"
+},
+{
+"q": "In the lab, which command deploys the production overlay that sets two replicas?",
+"o": [
+"oc apply -k overlays/production",
+"oc apply -f overlays/production/patch-replicas.yaml",
+"oc kustomize overlays/production",
+"oc create -k base"
+],
+"e": "Lab 在 declarative-review-production Project 執行 oc apply -k overlays/production，套用以 patch-replicas.yaml 將 replicas 設為 2 的 overlay。oc kustomize 只渲染不套用。"
+}
+]
+}

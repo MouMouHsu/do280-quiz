@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DO280 V4.22 · CH07 Managing Kubernetes Operators</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2430;--mute:#5b6676;--line:#dde2ea;--accent:#c00;--accent2:#8a0000;
+--ok:#1a7f37;--okbg:#e9f6ec;--bad:#c62828;--badbg:#fdecec;--sel:#eef3ff}
+@media (prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2128;--ink:#e6e9ee;--mute:#9aa4b2;--line:#323844;
+--sel:#24304a;--okbg:#16301f;--badbg:#3a1c1c;--ok:#5cc97a;--bad:#ff7b7b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+a{color:var(--accent)}
+header.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+.bar{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+.bar h1{font-size:18px;margin:0;flex:1;min-width:220px;line-height:1.35}
+.bar h1 small{display:block;font-weight:400;color:var(--mute);font-size:13px}
+.stat{font-size:14px;color:var(--mute);white-space:nowrap}
+.stat b{color:var(--ink)}
+.prog{height:4px;background:var(--line)}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.btn:hover{border-color:var(--mute)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0 4px}
+main{padding:8px 0 60px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.q h2{font-size:16px;font-weight:600;margin:0 0 12px;display:flex;gap:10px}
+.q h2 .n{color:var(--accent);flex:none;min-width:2.2em}
+.opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.opts label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
+.opts label:hover{background:var(--sel)}
+.opts input{margin-top:5px;accent-color:var(--accent)}
+.opts .k{font-weight:700;flex:none;width:1.3em}
+.opts label.chosen{background:var(--sel);border-color:#7b93c9}
+.opts label.right{background:var(--okbg);border-color:var(--ok)}
+.opts label.wrong{background:var(--badbg);border-color:var(--bad)}
+.act{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ans{display:none;margin-top:12px;border-left:4px solid var(--ok);background:var(--okbg);padding:10px 14px;border-radius:0 8px 8px 0}
+.ans.show{display:block}
+.ans.x{border-color:var(--bad);background:var(--badbg)}
+.ans .v{font-weight:700;margin-bottom:4px}
+.ans p{margin:4px 0 0}
+.badge{font-size:13px;font-weight:600}
+.badge.ok{color:var(--ok)}.badge.bad{color:var(--bad)}
+.summary{display:none;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:16px 20px;margin:14px 0}
+.summary.show{display:block}
+.hide{display:none!important}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:24px 0 40px}
+/* index */
+.hero{padding:34px 0 10px}.hero h1{margin:0 0 6px;font-size:26px}.hero p{color:var(--mute);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding:20px 0 40px}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .c{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.05em}
+.card h2{font-size:17px;margin:4px 0 2px;line-height:1.35}
+.card p{margin:0;color:var(--mute);font-size:14px}
+.card .best{margin-top:8px;font-size:13px;color:var(--mute)}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="bar">
+<h1><span lang="en">CH07 · Managing Kubernetes Operators</span><small>管理 Kubernetes Operator · 50 題單選題 · DO280 V4.22</small></h1>
+<span class="stat">已作答 <b id="done">0</b>/50 · 已對答 <b id="rev">0</b> · 答對 <b id="ok">0</b></span>
+</div></div><div class="prog"><i></i></div></header>
+<main><div class="wrap">
+<div class="tools"><a class="btn" href="index.html">← 回章節列表</a>
+<button class="btn primary" id="checkAll">全部對答案並計分</button>
+<button class="btn" id="wrongOnly">只看答錯</button>
+<button class="btn" id="reset">重新作答</button></div>
+<div class="summary" id="sum"></div>
+<div id="qs"></div>
+<div class="tools"><button class="btn primary" onclick="document.getElementById('checkAll').click()">全部對答案並計分</button><a class="btn" href="index.html">← 回章節列表</a></div>
+</div></main>
+<footer>題目依 DO280 V4.22 CH07 簡報內容撰寫 · 作答進度只存在你的瀏覽器</footer>
+<script>window.QUIZ={"id": "ch07", "q": [{"q": "What is the Operator pattern?", "o": ["A NetworkPolicy model for operators", "A method for scaling pods horizontally", "A way to package Helm charts into images", "A way to implement reusable software that manages complex workloads"], "a": 3, "e": "Operator 模式是實作可重複使用軟體、管理複雜 Workload 的方式，例如含資料庫、Backend 與 Front-end 的應用程式與其備份、更新工作。"}, {"q": "How does a cluster administrator typically describe a complex workload that an operator manages?", "o": ["By creating a custom resource (CR)", "By creating a ClusterOperator resource", "By editing the operator&#x27;s Deployment", "By creating a Deployment directly"], "a": 0, "e": "Cluster 管理員建立 Custom Resource 描述複雜 Workload，Operator 監看 CR 並建立、管理對應的 Kubernetes 資源。"}, {"q": "A database operator detects a database CR that includes a backup schedule. What might the operator create?", "o": ["Only a Service", "A new ClusterOperator", "A Helm release", "A StatefulSet, persistent volumes, and a CronJob for backups"], "a": 3, "e": "範例中資料庫 Operator 會建立 StatefulSet 與 Persistent Volume；若 CR 描述了備份排程，還會建立 CronJob 依排程備份。"}, {"q": "Which component installs and updates cluster operators as part of installing and updating OpenShift?", "o": ["Machine Config Operator", "Cluster Version Operator (CVO)", "Operator Lifecycle Manager (OLM)", "Cluster Samples Operator"], "a": 1, "e": "CVO 在安裝與更新 OpenShift 時，安裝並更新 Cluster Operator。"}, {"q": "Which component manages add-on operators?", "o": ["Authentication Operator", "Ingress Operator", "Cluster Version Operator (CVO)", "Operator Lifecycle Manager (OLM)"], "a": 3, "e": "由 OLM 管理的 Operator 稱為 Add-on Operator，為 Cluster 增加功能，有別於提供平台服務的 Cluster Operator。"}, {"q": "Which of these is an example of a service provided by cluster operators?", "o": ["A Helm chart repository", "The web console and the OAuth server", "The File Integrity Operator", "A community database operator"], "a": 1, "e": "Cluster Operator 提供 OpenShift 的平台服務，例如 Web Console 與 OAuth Server。"}, {"q": "How do the lifecycles of cluster operators and add-on operators differ?", "o": ["CVO updates cluster operators with the cluster version, while OLM manages add-on operators independently of cluster updates", "Both are updated only with the cluster version", "Both are updated only by OLM", "Add-on operators cannot be updated"], "a": 0, "e": "Cluster Operator 由 CVO 隨 Cluster 版本安裝與更新；Add-on Operator 由 OLM 獨立於 Cluster 更新來管理。"}, {"q": "Besides cluster and add-on operators, how can software vendors distribute operators?", "o": ["With manifests, Helm charts, or other mechanisms", "Only through the CVO", "Only through the Red Hat catalog", "Only as ClusterOperator resources"], "a": 0, "e": "軟體供應商可依 Operator 模式建立軟體，並以 Manifest、Helm Chart 或其他機制散布。"}, {"q": "Which command shows the status of cluster operators?", "o": ["oc get clusteroperator", "oc get subscription -A", "oc get packagemanifests", "oc get csv -A"], "a": 0, "e": "CVO 以 ClusterOperator 資源提供 Cluster Operator 的狀態；oc get clusteroperator 可了解 Cluster 的健康狀況。"}, {"q": "Where can you view ClusterOperator resources in the web console?", "o": ["Ecosystem → Software Catalog", "Ecosystem → Installed Operators", "Workloads → Topology", "Administration → Cluster Settings → ClusterOperators tab"], "a": 3, "e": "在 Web Console 的 Administration → Cluster Settings，點選 ClusterOperators 頁籤檢視。"}, {"q": "What is an operator catalog?", "o": ["A container image that provides information about available operators, such as descriptions and versions", "A list of installed operators in a ConfigMap", "A Helm repository index file", "A web page on the Red Hat customer portal"], "a": 0, "e": "Operator Catalog 是 Container Image，提供可用 Operator 的資訊給 OLM，例如描述與可用的版本。"}, {"q": "Which default catalog contains operators supported by independent software vendors and Red Hat partners?", "o": ["Marketplace", "Community", "Certified", "Red Hat"], "a": 2, "e": "Certified 目錄由獨立軟體供應商與 Red Hat 夥伴支援；Red Hat 目錄由 Red Hat 封裝與支援；Community 由開源社群支援。"}, {"q": "Which catalog&#x27;s operators are developed and supported by the open source community?", "o": ["Enterprise", "Red Hat", "Community", "Certified"], "a": 2, "e": "Community 目錄由開源社群開發與支援。"}, {"q": "What does OLM create for each operator available in a catalog?", "o": ["An InstallPlan", "A Deployment", "A ClusterOperator", "A PackageManifest"], "a": 3, "e": "OLM 為每個可用的 Operator 建立一個 PackageManifest，列出可用的 Channel 與版本，可用 Subscription CR 安裝。"}, {"q": "Why does the course recommend pulling operator images only from trusted private registries?", "o": ["It makes operators update automatically", "It helps protect the software supply chain and maintain digital sovereignty", "It disables the community catalog", "It is required for the CVO"], "a": 1, "e": "可建立自己的目錄或為離線 Cluster Mirror 目錄；只從受信任的私有 Registry 拉取 Image，有助於保護軟體供應鏈與維持數位主權。"}, {"q": "What two parts make up an operator?", "o": ["A Helm chart and a values file", "A Route and a Service", "A ClusterRole and a Secret", "A set of custom resource definitions and a Kubernetes workload"], "a": 3, "e": "Operator 由一組 CRD 與一個 Kubernetes Workload 組成，Workload 使用 Kubernetes API 監看 CR 並建立對應的 Workload。"}, {"q": "Each operator in a cluster has two sets of workloads. Who manages each set?", "o": ["The operator manages its own workload, and OLM manages the CR workloads", "OLM manages the operator&#x27;s own workload, and the operator manages the workloads associated with its CRs", "CVO manages both sets", "The kubelet manages both sets"], "a": 1, "e": "一組是 Operator 本身的 Workload，由 OLM 管理；另一組是與 CR 關聯的 Workload，由 Operator 管理。"}, {"q": "Which tool provides support for developing operators with Go and Ansible and packaging Helm charts as operators?", "o": ["Kustomize", "Java Operator SDK", "Operator SDK", "Helm CLI"], "a": 2, "e": "Operator SDK 可以 Go 與 Ansible 開發 Operator，也可把 Helm Chart 封裝為 Operator。"}, {"q": "Which tool develops operators in Java and includes a Quarkus extension?", "o": ["OLM", "Operator SDK", "Java Operator SDK", "odo"], "a": 2, "e": "Java Operator SDK 以 Java 開發 Operator，含 Quarkus 擴充套件，可用 Quarkus 框架開發。"}, {"q": "Where in the web console do you browse and install available operators?", "o": ["Networking → Operators", "Workloads → Operators", "Ecosystem → Software Catalog", "Administration → Cluster Settings"], "a": 2, "e": "在 Ecosystem → Software Catalog 檢視可用的 Operator 並以安裝精靈安裝；安裝前先檢閱 Operator 資訊與文件。"}, {"q": "In the Install Operator wizard, what does the Update Channel option define?", "o": ["The namespace for the operator workload", "Whether updates are automatic or manual", "The version stream that the operator subscription tracks, such as stable or fast", "The catalog source"], "a": 2, "e": "Update Channel 是 Operator Subscription 追蹤的版本串流，例如 stable 或 fast。"}, {"q": "What is the default installation mode in the Install Operator wizard, and what does it mean?", "o": ["Manual; the operator waits for approval", "A specific namespace; the operator watches only its own namespace", "All namespaces on the cluster; the operator watches CRs in all namespaces", "Single node; the operator runs on one node"], "a": 2, "e": "Installation Mode 預設為 All namespaces on the cluster，適合大多數 Operator，Operator 會監看所有 Namespace 的 CR。"}, {"q": "What is the difference between Installation Mode and Installed Namespace?", "o": ["Installation Mode determines which namespaces the operator watches; Installed Namespace determines where the operator workload runs", "Installation Mode chooses the catalog", "They are the same option", "Installed Namespace determines which namespaces are watched"], "a": 0, "e": "Installation Mode 決定 Operator 監看哪些 Namespace；Installed Namespace 是 Operator Workload 所在的 Namespace，兩者相關但不同。"}, {"q": "How does OLM handle operator updates by default, and how can you prevent automatic updates?", "o": ["OLM never updates automatically", "Updates require a cluster update", "OLM updates automatically by default; choose manual Update Approval to prevent it", "Remove the Update Channel"], "a": 2, "e": "Update Approval 預設自動更新；選擇手動可避免自動更新。"}, {"q": "Which resources does the Install Operator wizard create based on the selected options?", "o": ["Deployment and Service only", "ClusterOperator and ClusterVersion", "Subscription and OperatorGroup", "CatalogSource and PackageManifest"], "a": 2, "e": "安裝精靈會依選項建立 Subscription 與 OperatorGroup 資源，其他資源由 OLM 產生。"}, {"q": "What is a Cluster Service Version (CSV)?", "o": ["A Secret that stores operator credentials", "A resource for each operator version that contains the information OLM needs to install the operator", "The version of the OpenShift cluster", "A catalog image tag"], "a": 1, "e": "每個 Operator 版本都有 CSV，OLM 用其資訊安裝 Operator，並更新 status。"}, {"q": "An operator watches multiple namespaces. Where do its CSVs exist?", "o": ["Only in openshift-marketplace", "Only in openshift-operators", "In each watched namespace, because CSVs are namespaced", "As a single cluster-scoped resource"], "a": 2, "e": "CSV 屬於 Namespace；監看多個 Namespace 的 Operator，在每個 Namespace 都有 CSV。"}, {"q": "In the Installed Operators details page, which tab lets you change the update channel and approval strategy and links to the install plan?", "o": ["Details", "YAML", "All instances", "Subscription"], "a": 3, "e": "Subscription 頁籤可更改 Update Channel 與核准方式，並連到 Install Plan，手動更新時就在這裡核准。"}, {"q": "What is the primary mechanism for interacting with an operator?", "o": ["Editing the operator Deployment", "Running oc exec in the operator pod", "Creating custom resources", "Editing the CSV"], "a": 2, "e": "Custom Resource 是與 Operator 互動的主要機制；CR 類型依 Operator 而異。"}, {"q": "What is a limitation of the form view when creating a custom resource in the web console?", "o": ["It creates the resource in the wrong namespace", "It might not provide fields for every option", "It does not provide descriptions", "It cannot set any fields"], "a": 1, "e": "表單檢視逐一編輯欄位並有說明與下拉選單，但可能沒有所有選項的欄位；YAML 檢視則提供範本與 Schema 文件。"}, {"q": "Which resources should you examine to troubleshoot an operator installation problem?", "o": ["Only the operator pod logs", "The router logs", "The ClusterVersion resource", "The status and conditions of the CSV, Subscription, and Install Plan"], "a": 3, "e": "安裝問題需檢視 CSV、Subscription 與 Install Plan 的 status 與 Condition，並參閱 Operator 文件。"}, {"q": "In the web console exercise, which resource is the operator workload created by OLM for the File Integrity Operator?", "o": ["The file-integrity-operator Deployment", "The aide-example-fileintegrity DaemonSet", "The failed ConfigMap", "The FileIntegrityNodeStatus resource"], "a": 0, "e": "file-integrity-operator Deployment 是 OLM 建立的 Operator Workload；建立 FileIntegrity 後，Operator 才建立 aide-example-fileintegrity DaemonSet。"}, {"q": "In the File Integrity exercise, what appears after a file is created on a node and a check runs?", "o": ["A new CSV", "A failed ConfigMap whose report includes the added file", "A new ClusterOperator", "An InstallPlan that needs approval"], "a": 1, "e": "以 oc debug 在 Node 建立檔案後，會出現 failed ConfigMap，報告含新增的檔案 (例如 /hostroot/etc/foobar)。"}, {"q": "When installing an operator from the CLI, which resources must the administrator create?", "o": ["Subscription and OperatorGroup (and the namespace if needed); OLM generates the rest", "CatalogSource and PackageManifest", "InstallPlan, CSV, and Deployment", "ClusterOperator and ClusterVersion"], "a": 0, "e": "安裝時管理員只需建立 Subscription 與 OperatorGroup (必要時建立 Namespace)，其他資源由 OLM 自動產生。"}, {"q": "What does a CatalogSource resource reference?", "o": ["A Helm chart repository", "An operator repository that OLM checks periodically", "A Git repository of manifests", "An image registry for application images"], "a": 1, "e": "Catalog Source 參照 Operator Repository，OLM 定期檢查並取得 Operator 資訊。"}, {"q": "What does an OperatorGroup define?", "o": ["How OLM presents operators across namespaces, that is, which namespaces the operator watches", "The operator image", "The approval strategy", "The update channel"], "a": 0, "e": "Operator Group 定義 OLM 如何在 Namespace 之間呈現 Operator，也就是 Operator 監看哪些 Namespace。"}, {"q": "In which namespace are the default CatalogSource resources located?", "o": ["openshift-config", "openshift-marketplace", "openshift-operators", "openshift-operator-lifecycle-manager"], "a": 1, "e": "以 oc get catalogsource -n openshift-marketplace 列出 Catalog Source。"}, {"q": "Which command provides the catalog source, channels, current CSV, and supported install modes for an operator?", "o": ["oc describe packagemanifest NAME -n openshift-marketplace", "oc describe subscription NAME", "oc get clusteroperator NAME", "oc get csv NAME"], "a": 0, "e": "描述 Package Manifest 可取得 Catalog Source 與其 Namespace、Channel、目前 CSV、套件名稱與支援的 Install Modes。"}, {"q": "Why can the classroom lab complete the course without internet access?", "o": ["It has a single local catalog that provides the operators needed for the course", "All operators are cluster operators", "It does not use OLM", "It uses the community catalog cached in the browser"], "a": 0, "e": "實驗環境只有一個目錄，在本機提供課程所需的 Operator，因此可離線完成課程。"}, {"q": "Which OperatorGroup exists in the openshift-operators namespace, and what does it do?", "o": ["cluster-operators; it is used by the CVO", "openshift-operators-group; it watches only openshift-operators", "default; it denies all namespaces", "global-operators; operators installed there use it and watch all namespaces"], "a": 3, "e": "openshift-operators 內含 global-operators OperatorGroup，安裝到該 Namespace 的 Operator 使用它並監看所有 Namespace。"}, {"q": "In an OperatorGroup, how can you specify the namespaces the operator watches?", "o": ["List them in spec.channel", "Use spec.installPlanApproval", "List them in spec.targetNamespaces, or select them by label with spec.selector", "Use metadata.namespace only"], "a": 2, "e": "另建 OperatorGroup 時，以 targetNamespaces 列出要監看的 Namespace，也可用 spec.selector 以 Label 選取。"}, {"q": "Where do the channel, name, source, and sourceNamespace values for a Subscription come from?", "o": ["The CSV of the previous version", "The OperatorGroup", "The ClusterOperator resource", "The PackageManifest of the operator"], "a": 3, "e": "Subscription 的 channel、name、source 與 sourceNamespace，取自描述 Package Manifest 所得的資訊。"}, {"q": "Which values can spec.installPlanApproval take in a Subscription?", "o": ["True or False", "Automatic or Manual", "Immediate or Scheduled", "Stable or Fast"], "a": 1, "e": "installPlanApproval 為 Automatic 或 Manual。"}, {"q": "With installPlanApproval set to Automatic, what happens when a new version appears in the subscribed channel?", "o": ["OLM ignores it until the next cluster update", "OLM creates a new Subscription", "OLM waits for an administrator to approve", "OLM updates the operator immediately"], "a": 3, "e": "Automatic：新版本一出現在訂閱的 Channel，OLM 立即更新。"}, {"q": "With installPlanApproval set to Manual, what does OLM do when a new version is available?", "o": ["Updates immediately", "Creates an InstallPlan but does not approve it; an administrator must approve it", "Deletes the subscription", "Sends an email to the administrator"], "a": 1, "e": "Manual：OLM 建立 InstallPlan 但不核准，管理員檢閱後核准，OLM 才安裝新的 CSV。"}, {"q": "How do you identify an install plan that is waiting for approval?", "o": ["It has no CSV", "Its status is Succeeded", "It is listed in openshift-marketplace", "Its APPROVED column shows false in &#x27;oc get installplan&#x27;"], "a": 3, "e": "待核准的更新，oc get installplan 的 APPROVED 狀態為 false。"}, {"q": "Which command approves the install plan install-qrlwl in metallb-system?", "o": ["oc adm certificate approve install-qrlwl", "oc patch installplan install-qrlwl --type merge -p &#x27;{&quot;spec&quot;:{&quot;approved&quot;:true}}&#x27; -n metallb-system", "oc patch subscription install-qrlwl -p &#x27;{&quot;approved&quot;:true}&#x27;", "oc approve installplan install-qrlwl -n metallb-system"], "a": 1, "e": "核准方式是用 oc patch 把 Install Plan 的 spec.approved 設為 true。"}, {"q": "Which field of the Operator resource references the install plan?", "o": ["status.components.refs", "status.conditions[0].installPlan", "metadata.ownerReferences", "spec.installPlan"], "a": 0, "e": "Operator 資源的 status.components.refs 參照 Install Plan，可用 oc describe operator 找出。"}, {"q": "How do you change the update channel of an installed operator from the CLI?", "o": ["Patch the PackageManifest", "Patch the Subscription&#x27;s spec.channel", "Delete and recreate the OperatorGroup", "Edit the CSV&#x27;s version field"], "a": 1, "e": "以 oc patch subscription NAME --type merge -p &#x27;{&quot;spec&quot;:{&quot;channel&quot;:&quot;NEW&quot;}}&#x27; 變更；Automatic 時可能觸發更新，Manual 時可能建立需核准的 Install Plan。"}, {"q": "Which CSV field lists the CRDs that the operator defines?", "o": ["spec.customresourcedefinitions", "spec.install.spec.deployments", "status.components.refs", "spec.channel"], "a": 0, "e": "CSV 的 spec.customresourcedefinitions 列出 Operator 定義的 CRD；spec.install.spec.deployments 則列出 OLM 安裝時建立的 Deployment。"}]};</script>
+<script>
+const D=window.QUIZ, L='ABCD', KEY='do280-v422-'+D.id;
+let st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){st={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+const M=document.getElementById('qs');
+D.q.forEach((q,i)=>{
+  const s=document.createElement('section');s.className='q';s.id='q'+(i+1);
+  s.innerHTML=`<h2><span class="n">Q${i+1}.</span><span lang="en">${q.q}</span></h2>
+  <ul class="opts">${q.o.map((o,j)=>`<li><label><input type="radio" name="r${i}" value="${j}"><span class="k">${L[j]}.</span><span lang="en">${o}</span></label></li>`).join('')}</ul>
+  <div class="act"><button class="btn primary show-ans">查看答案與說明</button><span class="badge"></span></div>
+  <div class="ans"><div class="v"></div><p>${q.e}</p></div>`;
+  M.appendChild(s);
+  s.querySelectorAll('input').forEach(r=>r.addEventListener('change',()=>{st[i]={c:+r.value,r:st[i]&&st[i].r};save();paint(i,false)}));
+  s.querySelector('.show-ans').addEventListener('click',()=>{st[i]=st[i]||{};st[i].r=1;save();paint(i,true)});
+});
+function paint(i,scroll){
+  const q=D.q[i],s=document.getElementById('q'+(i+1)),x=st[i]||{};
+  const labels=s.querySelectorAll('label');
+  labels.forEach((lb,j)=>{lb.classList.remove('chosen','right','wrong');lb.querySelector('input').checked=(x.c===j);if(x.c===j)lb.classList.add('chosen')});
+  const a=s.querySelector('.ans'),b=s.querySelector('.badge'),btn=s.querySelector('.show-ans');
+  if(x.r){
+    labels[q.a].classList.add('right');
+    if(x.c!==undefined&&x.c!==q.a)labels[x.c].classList.add('wrong');
+    a.classList.add('show');a.classList.toggle('x',x.c!==undefined&&x.c!==q.a);
+    a.querySelector('.v').textContent=(x.c===undefined?'正確答案：':x.c===q.a?'答對了！正確答案：':'答錯了。正確答案：')+L[q.a]+'. '+strip(q.o[q.a]);
+    b.textContent=x.c===undefined?'未作答':x.c===q.a?'✔ 正確':'✘ 錯誤';b.className='badge '+(x.c===q.a?'ok':x.c===undefined?'':'bad');
+    btn.textContent='隱藏答案';btn.onclick=()=>{st[i].r=0;save();paint(i)};
+  }else{
+    a.classList.remove('show');b.textContent='';btn.textContent='查看答案與說明';
+    btn.onclick=()=>{st[i]=st[i]||{};st[i].r=1;save();paint(i)};
+  }
+  stats();
+}
+function strip(h){const t=document.createElement('div');t.innerHTML=h;return t.textContent}
+function stats(){
+  let done=0,rev=0,ok=0;D.q.forEach((q,i)=>{const x=st[i]||{};if(x.c!==undefined)done++;if(x.r&&x.c!==undefined){rev++;if(x.c===q.a)ok++}});
+  document.getElementById('done').textContent=done;document.getElementById('ok').textContent=ok;document.getElementById('rev').textContent=rev;
+  document.querySelector('.prog i').style.width=(done/D.q.length*100)+'%';
+}
+document.getElementById('checkAll').onclick=()=>{
+  D.q.forEach((q,i)=>{st[i]=st[i]||{};st[i].r=1});save();D.q.forEach((q,i)=>paint(i));
+  let ok=0,un=0;D.q.forEach((q,i)=>{if(st[i].c===undefined)un++;else if(st[i].c===q.a)ok++});
+  const s=document.getElementById('sum');s.classList.add('show');
+  s.innerHTML=`<b>成績：${ok} / ${D.q.length} (${Math.round(ok/D.q.length*100)}%)</b><br>答錯 ${D.q.length-ok-un} 題，未作答 ${un} 題。可按「只看答錯」複習。`;
+  try{const b=JSON.parse(localStorage.getItem('do280-v422-best')||'{}');if(!b[D.id]||ok>b[D.id]){b[D.id]=ok;localStorage.setItem('do280-v422-best',JSON.stringify(b))}}catch(e){}
+  s.scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('reset').onclick=()=>{if(!confirmReset())return;st={};save();document.getElementById('sum').classList.remove('show');filt=0;applyFilter();D.q.forEach((q,i)=>paint(i));window.scrollTo(0,0)};
+let armed=0;function confirmReset(){const b=document.getElementById('reset');if(armed){armed=0;b.textContent='重新作答';return true}armed=1;b.textContent='再按一次確認清除';setTimeout(()=>{armed=0;b.textContent='重新作答'},3000);return false}
+let filt=0;document.getElementById('wrongOnly').onclick=()=>{filt=!filt;applyFilter()};
+function applyFilter(){const b=document.getElementById('wrongOnly');b.textContent=filt?'顯示全部題目':'只看答錯';
+  D.q.forEach((q,i)=>{const x=st[i]||{};const w=x.r&&x.c!==undefined&&x.c!==q.a;document.getElementById('q'+(i+1)).classList.toggle('hide',!!filt&&!w)})}
+D.q.forEach((q,i)=>paint(i));
+</script>
+</body></html>

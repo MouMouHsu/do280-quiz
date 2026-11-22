@@ -1,0 +1,508 @@
+{
+"id": "ch04",
+"num": "CH04",
+"title": "Network Security",
+"zh": "網路安全",
+"q": [
+{
+"q": "Which OpenShift resource exposes an application through a unique, publicly accessible host name, with the Ingress Controller forwarding traffic to the pods?",
+"o": [
+"Route",
+"ClusterIP Service",
+"NetworkPolicy",
+"EndpointSlice"
+],
+"e": "Route 讓應用程式擁有唯一、可公開存取的 Host 名稱，由 Ingress Controller 把流量導到應用程式的 Pod。"
+},
+{
+"q": "Which methods can expose HTTP, HTTPS, TCP, and non-TCP traffic to external networks?",
+"o": [
+"NodePort and LoadBalancer services",
+"Ingress resources only",
+"Edge routes only",
+"NetworkPolicy resources"
+],
+"e": "NodePort 與 LoadBalancer 屬 Service 類型，可處理 HTTP、HTTPS、TCP 與非 TCP 流量；Ingress 主要用於 HTTP 與 HTTPS。"
+},
+{
+"q": "On ROSA and OpenShift Dedicated, how can a private cluster expose applications while the cluster itself stays private?",
+"o": [
+"Through a second, public Ingress Controller that creates a cloud-native load balancer at the internet edge",
+"By converting the cluster to public mode",
+"By using passthrough routes only",
+"By disabling NetworkPolicy"
+],
+"e": "私有 Cluster 可透過第二個對外的 Ingress Controller 暴露應用程式，它在網際網路邊緣建立雲端原生的 Load Balancer，Cluster 本身仍維持私有。"
+},
+{
+"q": "Which TLS termination type is the default for encrypted routes?",
+"o": [
+"Edge",
+"Passthrough",
+"Re-encrypt",
+"Mutual"
+],
+"e": "Edge 為預設類型：TLS 在 Router 終止，再把流量送到 Pod。"
+},
+{
+"q": "With an edge route, which part of the connection is NOT encrypted?",
+"o": [
+"The connection from the router to the pod",
+"The connection from the client to the router",
+"Both connections",
+"Neither connection"
+],
+"e": "Edge 模式下 Client 到 Router 是加密的，TLS 在 Router 終止，Router 到 Pod 的內部連線沒有加密。"
+},
+{
+"q": "With which route termination type does the router NOT terminate TLS and instead forward encrypted traffic directly to the pod?",
+"o": [
+"Passthrough",
+"Edge",
+"Re-encrypt",
+"Insecure"
+],
+"e": "Passthrough 的 Router 不終止 TLS，加密流量直接送到 Pod，由應用程式提供憑證並解密。"
+},
+{
+"q": "Which route termination type can provide mutual authentication between the application and the client?",
+"o": [
+"Passthrough",
+"Edge",
+"Re-encrypt",
+"Unencrypted"
+],
+"e": "Passthrough 由應用程式自己處理 TLS，可提供應用程式與 Client 之間的雙向驗證。"
+},
+{
+"q": "Which route termination type terminates TLS at the router and then encrypts a new connection to the pod, possibly with a different certificate?",
+"o": [
+"Re-encrypt",
+"Passthrough",
+"Edge",
+"Redirect"
+],
+"e": "Re-encrypt 是 Edge 的變化，Router 終止 TLS 後再重新加密連到 Pod，Pod 可使用不同憑證，整條路徑都加密，安全性最高。"
+},
+{
+"q": "What is required to create an encrypted route?",
+"o": [
+"A key and certificate, and a TLS termination type",
+"Only a NetworkPolicy",
+"A LoadBalancer service",
+"Cluster-admin privileges"
+],
+"e": "加密的 Route 需要設定 Key 與憑證，並指定 TLS 終止類型；不加密的 Route 則不需要 Key 與憑證。"
+},
+{
+"q": "In 'oc create route edge --service api-frontend --hostname api.apps.acme.com --key api.key --cert api.crt', what does --key provide?",
+"o": [
+"The private key of the certificate",
+"The CA bundle",
+"The service account token",
+"The router's public key"
+],
+"e": "--key 需要憑證的私鑰，--cert 需要簽署過的憑證。"
+},
+{
+"q": "If you omit --key and --cert when creating an edge route, what happens?",
+"o": [
+"The Ingress Operator provides a certificate from an internal CA, and the route references a Secret that contains it",
+"The route creation fails",
+"The route is created as an unencrypted route",
+"The application must provide the certificate"
+],
+"e": "省略 --key 與 --cert 時，Ingress Operator 以內部 Certificate Authority 提供憑證，Route 改為參照含該憑證的 Secret。"
+},
+{
+"q": "What happens if you run 'oc create route' with --dry-run=server?",
+"o": [
+"The route is still created, because create route does not support server dry-run",
+"The route is validated and not created",
+"The command fails with an error",
+"Only the TLS Secret is created"
+],
+"e": "create route 不支援 --dry-run=server，即使指定仍會真的建立 Route；只想產生 Manifest 時要用 --dry-run=client。"
+},
+{
+"q": "For a passthrough route, how can the application access its certificate?",
+"o": [
+"Store the certificate as a TLS Secret and mount it into the container as a volume",
+"Reference it in the route's --cert option",
+"Store it in the router's configuration",
+"Download it from the Ingress Operator at startup"
+],
+"e": "Passthrough 需要讓應用程式存取憑證，常見做法是存為 TLS Secret，再以 Volume Mount 到 Container。"
+},
+{
+"q": "Which command creates a TLS Secret named todo-certs?",
+"o": [
+"oc create secret tls todo-certs --cert training.crt --key training.key",
+"oc create secret generic todo-certs --tls training.crt",
+"oc create configmap todo-certs --from-file training.crt",
+"oc create route secret todo-certs"
+],
+"e": "oc create secret tls NAME --cert FILE --key FILE 建立 TLS Secret。"
+},
+{
+"q": "For a re-encrypt route, which certificate does the router use toward the internal service?",
+"o": [
+"A service certificate that contains the OpenShift internal FQDN, which the service-ca controller can issue",
+"The client's certificate",
+"The same public certificate that the client trusts",
+"No certificate; the internal connection is plain text"
+],
+"e": "Re-encrypt 先以 Client 信任的 FQDN 憑證終止外部連線，再以含 OpenShift 內部 FQDN 的服務憑證重新加密連到 Service，可由 service-ca controller 簽發。"
+},
+{
+"q": "In the guided exercise, a debug pod accesses the passthrough application over HTTP at the service level. What is the result?",
+"o": [
+"A 301 redirect to HTTPS",
+"A 200 response in plain text",
+"A connection refused error",
+"A 403 forbidden error"
+],
+"e": "部署 v1.2 版本後，Debug Pod 以 HTTP 存取會得到 301，轉向 HTTPS。"
+},
+{
+"q": "By default, which pods can reach a pod in a project?",
+"o": [
+"Other pods, VMs, and endpoints in the cluster, including pods in other namespaces",
+"Only pods in the same project",
+"Only the router pods",
+"No pods until a NetworkPolicy allows it"
+],
+"e": "預設不隔離：Project 中的 Pod 與 VM 可被 Cluster 內其他 Pod、VM 與 Endpoint 存取，不同 Namespace 之間也能互相連線。"
+},
+{
+"q": "How does a NetworkPolicy identify the traffic to control?",
+"o": [
+"By labels rather than IP addresses",
+"By IP addresses only",
+"By node names",
+"By container image names"
+],
+"e": "與傳統防火牆不同，Network Policy 以 Label 而非 IP 位址識別要控制的流量。"
+},
+{
+"q": "Do developers need administrator privileges to create NetworkPolicy resources in their projects?",
+"o": [
+"No; they can set isolation policies for their own pods without administrator rights",
+"Yes; only cluster-admin can create them",
+"Yes; they need the cluster-reader role",
+"Only on single-node clusters"
+],
+"e": "Network Policy 可設定個別 Pod 的隔離政策，不需要管理員權限，開發者可自行控制 Project 裡的應用程式。"
+},
+{
+"q": "Which traffic is NOT blocked by NetworkPolicy?",
+"o": [
+"Traffic from host-networked pods to pods on the same node",
+"Traffic between pods in different namespaces",
+"Traffic from the router on a different node",
+"Traffic on non-standard ports"
+],
+"e": "Network Policy 不會阻擋使用 Host Networking 的 Pod 對同一 Node 上 Pod 的流量，例如單一 Node Cluster 的 Ingress Pod。"
+},
+{
+"q": "Who defines AdminNetworkPolicy resources, and can namespace users override them?",
+"o": [
+"Cluster administrators; namespace users cannot override them",
+"Namespace administrators; anyone can override them",
+"Developers; only cluster administrators can override them",
+"The Ingress Operator; they are read-only"
+],
+"e": "AdminNetworkPolicy (ANP) 由 Cluster 管理員定義，強制執行 Cluster 範圍的規則，各 Namespace 的使用者無法覆寫。"
+},
+{
+"q": "What is the purpose of BaselineAdminNetworkPolicy (BANP)?",
+"o": [
+"To define baseline rules that namespace users can override",
+"To define rules that nobody can override",
+"To replace NetworkPolicy in each namespace",
+"To configure TLS profiles"
+],
+"e": "BANP 由 Cluster 管理員定義基準規則，各 Namespace 的使用者可以覆寫。簡報註明 BANP 不在本課程範圍內。"
+},
+{
+"q": "In which order does OVN-Kubernetes evaluate network policy tiers?",
+"o": [
+"ANP in tier 1, NetworkPolicy in tier 2, BANP in tier 3",
+"NetworkPolicy in tier 1, ANP in tier 2, BANP in tier 3",
+"BANP in tier 1, ANP in tier 2, NetworkPolicy in tier 3",
+"All policies are evaluated at the same time"
+],
+"e": "OVN-Kubernetes 以 ACL Tier 評估：Tier 1 為 ANP、Tier 2 為 NP、Tier 3 為 BANP。"
+},
+{
+"q": "Why can a developer create a NetworkPolicy that allows traffic blocked by a BaselineAdminNetworkPolicy?",
+"o": [
+"NetworkPolicy (tier 2) is evaluated before BANP (tier 3)",
+"BANP is evaluated only for egress",
+"Developers have priority over cluster administrators",
+"BANP rules are advisory only"
+],
+"e": "第二層 NP 先於第三層 BANP 評估，所以開發者可以放行被基準政策擋下的流量；但無法覆寫 ANP 在第一層定義的拒絕規則。"
+},
+{
+"q": "Traffic matches an AdminNetworkPolicy Deny rule in tier 1. What happens to the NetworkPolicy rules in the namespace?",
+"o": [
+"They are skipped; the traffic is denied",
+"They are evaluated and can allow the traffic",
+"They override the ANP",
+"They are merged with the ANP rule"
+],
+"e": "流量符合 ANP 規則時直接依規則允許或拒絕，既有的 NetworkPolicy 規則會被略過；只有沒有符合或符合 Pass 規則時才進入第二層。"
+},
+{
+"q": "Multiple NetworkPolicies select the same pod. How is the allowed traffic determined?",
+"o": [
+"Policies are additive: the allowed traffic is the union of all matching policies",
+"The most restrictive policy wins",
+"Only the newest policy applies",
+"The policies conflict and all traffic is blocked"
+],
+"e": "多個 Network Policy 可套用到同一 Pod，且具累加性，允許的流量是所有符合政策的聯集。"
+},
+{
+"q": "What does a NetworkPolicy with 'podSelector: {}' and no ingress rules do?",
+"o": [
+"Blocks all ingress traffic to every pod in the project",
+"Allows all traffic to every pod",
+"Has no effect",
+"Blocks only egress traffic"
+],
+"e": "這就是 default-deny 政策：空的 podSelector 套用到 Project 內所有 Pod，沒有定義 ingress 規則，因此封鎖所有進入的流量。"
+},
+{
+"q": "A pod is not selected by any NetworkPolicy. How is its traffic treated?",
+"o": [
+"OpenShift does not restrict its traffic",
+"All traffic is blocked",
+"Only same-namespace traffic is allowed",
+"Only router traffic is allowed"
+],
+"e": "Pod 若不符合任何 Network Policy，OpenShift 就不會限制它的流量；因此要建立只允許明確放行流量的環境，必須包含拒絕所有流量的政策。"
+},
+{
+"q": "Before a NetworkPolicy can allow traffic from another namespace by using a namespaceSelector, what is usually required?",
+"o": [
+"Label the source namespace, because namespaces do not have such labels by default",
+"Restart the OVN-Kubernetes pods",
+"Create a route in the source namespace",
+"Grant cluster-admin to the source namespace"
+],
+"e": "先以 oc label namespace 為需要存取的 Namespace 加上 Label，再建立選取該 Label 的政策；練習中也提到 Namespace 預設不會有 Label。"
+},
+{
+"q": "In a NetworkPolicy spec, which field is required and determines which pods the policy applies to?",
+"o": [
+"The top-level podSelector",
+"ingress.from",
+"ports",
+"policyTypes"
+],
+"e": "頂層 podSelector 必填，決定哪些 Pod 使用此政策；ingress.from 定義來源，ports 為允許到達所選 Pod 的目的 Port。"
+},
+{
+"q": "In a NetworkPolicy, what do the entries under 'ports' specify?",
+"o": [
+"The destination ports that are allowed to reach the selected pods",
+"The source ports of the client",
+"The node ports to open",
+"The router ports"
+],
+"e": "ports 是允許到達所選 Pod 的目的 Port，例如 port: 8080、protocol: TCP。"
+},
+{
+"q": "In a from list, namespaceSelector and podSelector appear in the same list item. How are they combined?",
+"o": [
+"With AND logic",
+"With OR logic",
+"The podSelector is ignored",
+"The namespaceSelector is ignored"
+],
+"e": "合併在同一個物件時條件以 AND 組合，例如只允許 network=dev Namespace 中 app=mobile 的 Pod。"
+},
+{
+"q": "In a from list, namespaceSelector and podSelector appear as two separate list items. Which sources are allowed?",
+"o": [
+"Any pod in the matching namespace, or any pod with the matching label in any namespace",
+"Only pods that match both selectors",
+"Only pods in the policy's own namespace",
+"No sources"
+],
+"e": "分成清單中的多個物件時條件以 OR 組合：network=dev Namespace 的任何 Pod，或任何 Namespace 中 app=mobile 的 Pod。兩者只差在縮排與清單寫法，要特別小心。"
+},
+{
+"q": "After securing pods with a deny-all NetworkPolicy on a multi-node cluster, why might routes stop working?",
+"o": [
+"Router pods need an explicit policy, such as allow-from-openshift-ingress, to reach the application pods",
+"Routes require a LoadBalancer service",
+"The Ingress Operator is deleted",
+"TLS certificates expire"
+],
+"e": "提供外部存取的 Router Pod 需要明確的政策才能存取被保護的 Pod，例如 allow-from-openshift-ingress；練習也提到多 Node Cluster 需要此政策。"
+},
+{
+"q": "Which namespace label does the allow-from-openshift-ingress policy select?",
+"o": [
+"policy-group.network.openshift.io/ingress: \"\"",
+"network.openshift.io/policy-group: monitoring",
+"kubernetes.io/metadata.name: openshift-ingress-operator",
+"app: router"
+],
+"e": "範例政策的 namespaceSelector 選取 policy-group.network.openshift.io/ingress: \"\"；Monitoring 政策則改選 network.openshift.io/policy-group: monitoring。"
+},
+{
+"q": "When does an application namespace need a NetworkPolicy that allows the monitoring service?",
+"o": [
+"When the application provides a metrics endpoint",
+"Whenever a route is created",
+"Only when using passthrough routes",
+"Never; monitoring bypasses NetworkPolicy"
+],
+"e": "當應用程式提供 Metrics Endpoint 時，Monitoring 服務需要明確的政策才能存取被保護的 Pod。"
+},
+{
+"q": "Starting with RHOCP 4.22, what do the operators that manage cluster DNS and ingress do in namespaces such as openshift-dns and openshift-ingress?",
+"o": [
+"Automatically install deny-all policies that you should not modify",
+"Remove all NetworkPolicies",
+"Disable OVN-Kubernetes",
+"Create AdminNetworkPolicies for every project"
+],
+"e": "從 RHOCP 4.22 起，這些 Operator 會自動安裝 deny-all 政策；請勿修改，也不要在這些 Namespace 執行自訂 Pod，否則流量會被封鎖。"
+},
+{
+"q": "What is the API group and version of AdminNetworkPolicy in the course example?",
+"o": [
+"policy.networking.k8s.io/v1alpha1",
+"networking.k8s.io/v1",
+"k8s.ovn.org/v1",
+"network.openshift.io/v1"
+],
+"e": "ANP 的 API group 為 policy.networking.k8s.io/v1alpha1；一般 NetworkPolicy 則是 networking.k8s.io/v1。"
+},
+{
+"q": "How does the priority field of an AdminNetworkPolicy work?",
+"o": [
+"Lower values are evaluated first, in the range 0 to 99",
+"Higher values are evaluated first, in the range 1 to 1000",
+"Priority is ignored when action is Deny",
+"Priority applies only to egress"
+],
+"e": "priority 決定套用順序，數值小者先評估，範圍 0 到 99；管理員要謹慎指派，避免非預期的覆寫。"
+},
+{
+"q": "In an AdminNetworkPolicy, what does 'subject: namespaces: {}' mean?",
+"o": [
+"The policy applies to the entire cluster",
+"The policy applies to no namespaces",
+"The policy applies only to the default namespace",
+"The policy applies only to openshift-* namespaces"
+],
+"e": "subject 指定套用的 Namespace；空的 namespaces 選擇器代表整個 Cluster。"
+},
+{
+"q": "Which requirement applies to every rule in an AdminNetworkPolicy?",
+"o": [
+"Each rule must have a name",
+"Each rule must specify a port",
+"Each rule must use action Allow",
+"Each rule must include a podSelector"
+],
+"e": "簡報指出 ANP 規則必須有 name，例如 deny-untrusted-ingress、allow-db-egress。"
+},
+{
+"q": "In an AdminNetworkPolicy egress rule, which field selects destinations outside the cluster by CIDR block?",
+"o": [
+"networks",
+"namespaces",
+"pods",
+"ipBlock.except"
+],
+"e": "egress 規則以 networks 用 CIDR 區塊選取 Cluster 外的對象，例如 10.0.0.0/24，並以 portNumber 比對 Port 與協定。"
+},
+{
+"q": "According to the course, what is true about application traffic in OpenShift by default?",
+"o": [
+"It is not encrypted, and applications do not necessarily verify each other",
+"It is always encrypted with mTLS",
+"It is encrypted only within the same node",
+"It is blocked between namespaces"
+],
+"e": "OpenShift 預設加密 Node 與 Control Plane 之間的流量，但應用程式流量預設不加密，應用程式也不一定驗證彼此。"
+},
+{
+"q": "Which post-quantum capability does RHOCP 4.22 support for TLS 1.3 connections?",
+"o": [
+"Hybrid ML-KEM key exchange",
+"Quantum key distribution hardware",
+"RSA-8192 certificates",
+"TLS 1.2 with post-quantum ciphers"
+],
+"e": "RHOCP 4.22 在 TLS 1.3 連線支援混合式 ML-KEM Key Exchange，可於 API Server、Ingress Controller 等元件設定 Modern TLS Security Profile 啟用。"
+},
+{
+"q": "What trade-off does the course mention for post-quantum cryptography in RHOCP 4.22?",
+"o": [
+"It is currently incompatible with FIPS 140 validated cryptography",
+"It requires disabling NetworkPolicy",
+"It works only with TLS 1.2",
+"It doubles the certificate validity period"
+],
+"e": "所有 PQC 機制都需要 TLS 1.3 以上，目前與 FIPS 140 驗證的密碼學不相容，需要在 FIPS 合規與 PQC 保護之間取捨。"
+},
+{
+"q": "Which annotation on a Service makes the service-ca controller generate a signed certificate and key?",
+"o": [
+"service.beta.openshift.io/serving-cert-secret-name",
+"service.beta.openshift.io/inject-cabundle",
+"route.openshift.io/termination",
+"openshift.io/generate-cert"
+],
+"e": "在 Service 套用 service.beta.openshift.io/serving-cert-secret-name=SECRET，Controller 就在同一 Namespace 建立含 tls.crt 與 tls.key 的 Secret。"
+},
+{
+"q": "How does a client application obtain the CA bundle needed to verify service certificates?",
+"o": [
+"Annotate a dedicated ConfigMap with service.beta.openshift.io/inject-cabundle=true and mount it in the client pod",
+"Copy the router-ca Secret manually into every pod",
+"Use the kubeconfig file's CA",
+"Use the htpasswd Secret"
+],
+"e": "對 ConfigMap 加上 inject-cabundle=true Annotation，Controller 會把 CA Bundle 寫入 data 中的 service-ca.crt，再 Mount 到 Client Pod 供驗證 Server 憑證。"
+},
+{
+"q": "Why should you use a dedicated ConfigMap for CA bundle injection?",
+"o": [
+"The controller replaces all data in the selected ConfigMap",
+"The controller deletes the ConfigMap after injection",
+"Only empty ConfigMaps can be mounted",
+"The ConfigMap must be in openshift-config"
+],
+"e": "service-ca controller 會取代所選 ConfigMap 的所有資料，請使用專用 ConfigMap，避免覆寫既有資料。"
+},
+{
+"q": "How long is the service CA certificate valid by default, and when is it rotated automatically?",
+"o": [
+"26 months; it is rotated when less than 13 months of validity remain",
+"12 months; it is rotated after 6 months",
+"90 days; it is rotated after 60 days",
+"It never expires"
+],
+"e": "Service CA 憑證預設有效 26 個月，有效期低於 13 個月時自動輪替；輪替後 13 個月內原憑證仍有效，期間需重新啟動信任原憑證的 Pod。"
+},
+{
+"q": "How do you manually rotate a service certificate generated by the service-ca controller?",
+"o": [
+"Delete the Secret that contains the certificate; the controller generates a new one",
+"Delete the Service",
+"Edit the tls.crt field directly",
+"Restart the router pods"
+],
+"e": "刪除含該憑證的 Secret，Controller 會自動產生新的 Secret。若刪除 openshift-service-ca 中的 signing-key Secret 則會輪替 Service CA 本身，並立即使舊憑證失效。"
+}
+]
+}

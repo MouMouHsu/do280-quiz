@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DO280 V4.22 · CH02 Deploying Packaged Applications</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2430;--mute:#5b6676;--line:#dde2ea;--accent:#c00;--accent2:#8a0000;
+--ok:#1a7f37;--okbg:#e9f6ec;--bad:#c62828;--badbg:#fdecec;--sel:#eef3ff}
+@media (prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2128;--ink:#e6e9ee;--mute:#9aa4b2;--line:#323844;
+--sel:#24304a;--okbg:#16301f;--badbg:#3a1c1c;--ok:#5cc97a;--bad:#ff7b7b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+a{color:var(--accent)}
+header.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+.bar{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+.bar h1{font-size:18px;margin:0;flex:1;min-width:220px;line-height:1.35}
+.bar h1 small{display:block;font-weight:400;color:var(--mute);font-size:13px}
+.stat{font-size:14px;color:var(--mute);white-space:nowrap}
+.stat b{color:var(--ink)}
+.prog{height:4px;background:var(--line)}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.btn:hover{border-color:var(--mute)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0 4px}
+main{padding:8px 0 60px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.q h2{font-size:16px;font-weight:600;margin:0 0 12px;display:flex;gap:10px}
+.q h2 .n{color:var(--accent);flex:none;min-width:2.2em}
+.opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.opts label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
+.opts label:hover{background:var(--sel)}
+.opts input{margin-top:5px;accent-color:var(--accent)}
+.opts .k{font-weight:700;flex:none;width:1.3em}
+.opts label.chosen{background:var(--sel);border-color:#7b93c9}
+.opts label.right{background:var(--okbg);border-color:var(--ok)}
+.opts label.wrong{background:var(--badbg);border-color:var(--bad)}
+.act{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ans{display:none;margin-top:12px;border-left:4px solid var(--ok);background:var(--okbg);padding:10px 14px;border-radius:0 8px 8px 0}
+.ans.show{display:block}
+.ans.x{border-color:var(--bad);background:var(--badbg)}
+.ans .v{font-weight:700;margin-bottom:4px}
+.ans p{margin:4px 0 0}
+.badge{font-size:13px;font-weight:600}
+.badge.ok{color:var(--ok)}.badge.bad{color:var(--bad)}
+.summary{display:none;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:16px 20px;margin:14px 0}
+.summary.show{display:block}
+.hide{display:none!important}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:24px 0 40px}
+/* index */
+.hero{padding:34px 0 10px}.hero h1{margin:0 0 6px;font-size:26px}.hero p{color:var(--mute);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding:20px 0 40px}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .c{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.05em}
+.card h2{font-size:17px;margin:4px 0 2px;line-height:1.35}
+.card p{margin:0;color:var(--mute);font-size:14px}
+.card .best{margin-top:8px;font-size:13px;color:var(--mute)}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="bar">
+<h1><span lang="en">CH02 · Deploying Packaged Applications</span><small>部署封裝應用程式 · 50 題單選題 · DO280 V4.22</small></h1>
+<span class="stat">已作答 <b id="done">0</b>/50 · 已對答 <b id="rev">0</b> · 答對 <b id="ok">0</b></span>
+</div></div><div class="prog"><i></i></div></header>
+<main><div class="wrap">
+<div class="tools"><a class="btn" href="index.html">← 回章節列表</a>
+<button class="btn primary" id="checkAll">全部對答案並計分</button>
+<button class="btn" id="wrongOnly">只看答錯</button>
+<button class="btn" id="reset">重新作答</button></div>
+<div class="summary" id="sum"></div>
+<div id="qs"></div>
+<div class="tools"><button class="btn primary" onclick="document.getElementById('checkAll').click()">全部對答案並計分</button><a class="btn" href="index.html">← 回章節列表</a></div>
+</div></main>
+<footer>題目依 DO280 V4.22 CH02 簡報內容撰寫 · 作答進度只存在你的瀏覽器</footer>
+<script>window.QUIZ={"id": "ch02", "q": [{"q": "What is an OpenShift template?", "o": ["A YAML file that can only create Deployments", "A container image used as a base for builds", "A Kubernetes custom resource that describes a set of resource configurations with parameters", "A Helm chart stored in the openshift namespace"], "a": 2, "e": "Template 是 Kubernetes Custom Resource，描述一組 Resource 的設定並可帶參數；處理 Template 並提供參數值，即可建立一組相關的 Object。"}, {"q": "Which component places the sample templates and image streams in the openshift namespace?", "o": ["Cluster Version Operator", "Authentication Operator", "Operator Lifecycle Manager", "Cluster Samples Operator"], "a": 3, "e": "Cluster Samples Operator 會把 Template 與 Image Stream 放入 openshift Namespace。"}, {"q": "What are the three main parts of a template?", "o": ["Base, overlay, and patches", "Parameters, labels, and objects", "Chart, release, and version", "Rules, roles, and bindings"], "a": 1, "e": "Template 由 Parameters (部署時提供值)、Labels (套用到所有 Object) 與 Objects (要建立的 Resource 清單) 組成。"}, {"q": "Which resources can a template create?", "o": ["Any Kubernetes resource that you have permission to create in the project", "Only cluster-scoped resources", "Only resources in the openshift namespace", "Only Deployments and Services"], "a": 0, "e": "Template 可建立 Project 中你有權限建立的任何 Kubernetes Resource。"}, {"q": "Which command lists the templates provided in the openshift namespace?", "o": ["oc get templates --all", "oc process --list -n openshift", "oc get templates -n openshift", "helm list -n openshift"], "a": 2, "e": "oc get templates -n openshift 列出名稱、描述、參數數量與建立的 Object 數量。"}, {"q": "In the output of &#x27;oc get templates&#x27;, what does the OBJECTS column show?", "o": ["The number of parameters that are required", "The number of projects that use the template", "The number of objects that the template creates", "The number of times the template was deployed"], "a": 2, "e": "OBJECTS 欄位表示 Template 會建立的 Object 數量；PARAMETERS 欄位表示參數數量。"}, {"q": "In &#x27;oc describe template&#x27; output, what does a parameter&#x27;s Value field represent?", "o": ["A value that cannot be changed", "The encrypted value of a Secret", "The default value, which can be overridden at deployment", "The value currently used in the cluster"], "a": 2, "e": "參數的 Value 是預設值，部署時可以覆寫。"}, {"q": "A parameter shows &#x27;Generated: expression&#x27; and &#x27;From: [a-zA-Z0-9]{16}&#x27;. What does this mean?", "o": ["A default value is generated from the expression, such as a random 16-character password", "The value must be entered by the user in that format or deployment fails", "The parameter is read from a file named [a-zA-Z0-9]{16}", "The parameter is deprecated"], "a": 0, "e": "Generated 與 From 欄位依表達式自動產生參數的預設值，例如隨機產生 16 個字元的密碼。"}, {"q": "Where do the &#x27;Object Labels&#x27; defined in a template get applied?", "o": ["Only to pods", "To the namespace", "Only to the template resource itself", "To every resource that the template creates"], "a": 3, "e": "Object Labels 會套用到 Template 建立的所有 Resource。"}, {"q": "Which command shows the parameters that a template uses?", "o": ["oc get template TEMPLATE --params", "oc explain template.parameters", "oc describe parameters TEMPLATE", "oc process --parameters TEMPLATE"], "a": 3, "e": "oc process --parameters 顯示 Template 使用的參數，包含名稱、產生方式與預設值；加 -f 可檢視檔案中的 Template 參數。"}, {"q": "How can you view the parameters of a template defined in a local file named my-postgresql.yaml?", "o": ["oc get template -f my-postgresql.yaml --parameters", "oc process --parameters -f my-postgresql.yaml", "oc describe -f my-postgresql.yaml --values", "helm show values my-postgresql.yaml"], "a": 1, "e": "以 -f 選項可檢視檔案中定義的 Template 參數。"}, {"q": "Which command retrieves the full YAML manifest of the postgresql-ephemeral template?", "o": ["oc process postgresql-ephemeral --export", "oc extract template/postgresql-ephemeral", "oc describe template postgresql-ephemeral -o yaml", "oc get template postgresql-ephemeral -o yaml -n openshift"], "a": 3, "e": "oc get template NAME -o yaml 取得 Template Manifest，可看出 Template 如何建立 Resource，也適合用來學習撰寫 Template。"}, {"q": "Which approach does the course recommend for deploying a template to production?", "o": ["Use oc new-app --template directly in production", "Process the template into manifests with oc process and then apply them with oc apply", "Use helm install with the template name", "Edit the template in the openshift namespace"], "a": 1, "e": "開發測試可用 oc new-app 一步建立；正式環境建議先以 oc process 產生 Manifest (可納入版本控制)，再用 oc apply 建立或更新。"}, {"q": "Which command deploys a template in one step, which is convenient for development and testing?", "o": ["oc new-app --template NAME -p KEY=VALUE", "oc get template NAME -o yaml", "oc process NAME | oc diff -f -", "oc create -f template.yaml"], "a": 0, "e": "oc new-app --template 搭配參數一步就建立並部署 Resource，適合開發測試。"}, {"q": "How do you set parameter values on the command line with oc process?", "o": ["--set KEY=VALUE", "-e KEY=VALUE", "-p KEY=VALUE", "--values KEY=VALUE"], "a": 2, "e": "oc process 以 -p 的 key=value 設定參數；--set 與 --values 是 Helm 的用法。"}, {"q": "Which oc process option reads parameter values from a file?", "o": ["--param-file", "--values", "--patch-file", "--from-env-file"], "a": 0, "e": "--param-file 從檔案讀取參數。參數多時比較整潔，而且參數檔可以存入版本控制，記錄正式環境使用的值。"}, {"q": "How can you deploy a processed template without writing an intermediate manifest file?", "o": ["Use oc create --template", "Pipe the output to oc apply -f -", "Use oc process -o cluster", "Use oc process --apply"], "a": 1, "e": "不必產生檔案，可直接把 oc process 的輸出以管線傳給 oc apply -f -。"}, {"q": "What permission do you need to process a template that is stored in a namespace?", "o": ["Only the view role", "No permission is needed", "cluster-admin", "Write permission in that namespace"], "a": 3, "e": "簡報指出，處理 Namespace 中的 Template 需要該 Namespace 的寫入權限。"}, {"q": "Before updating a template-based deployment with new parameters, how can you preview the changes?", "o": ["oc process TEMPLATE --dry-run", "oc process TEMPLATE --param-file FILE | oc diff -f -", "helm diff TEMPLATE", "oc apply --preview"], "a": 1, "e": "先把新參數產生的 Manifest 以管線交給 oc diff -f -，與現有 Resource 比較，確認差異符合預期再套用。"}, {"q": "In the template update example, oc diff shows memory changing from 1Gi to 2Gi and generation increasing. What does this mean?", "o": ["Applying the new manifest increases the memory limit and updates the Deployment", "The template itself was modified in the openshift namespace", "The pod already uses 2Gi of memory", "The update will fail"], "a": 0, "e": "範例差異顯示記憶體上限由 1Gi 改為 2Gi，generation 遞增，代表套用後 Deployment 會更新。"}, {"q": "What is a limitation of updating applications by reprocessing a template and running oc apply?", "o": ["It requires Helm to be installed", "It deletes all persistent data", "It cannot change parameters", "It suits simple changes such as parameter updates, but many workload updates cannot be done this way"], "a": 3, "e": "重新處理並套用適合參數變更等簡單更新；許多 Workload 更新無法以此機制完成，較複雜的應用程式可改用 Helm Chart。"}, {"q": "When copying a standard template for your own use, which change does the course recommend?", "o": ["Convert it into a Helm chart", "Give it a new name, adjust parameter defaults, and remove the template&#x27;s namespace field", "Add cluster-admin to the template", "Keep the original name so that oc new-app finds it"], "a": 1, "e": "建議取專屬新名稱、調整檔尾的參數預設值，並移除 Template 的 namespace 欄位，再上傳到目標 Project。"}, {"q": "What does &#x27;oc create -f my-postgresql.yaml&#x27; create when the file contains a Template?", "o": ["A new project", "All resources defined in the template", "The Template resource itself, not the resources it defines", "A Helm release"], "a": 2, "e": "以 oc create -f 上傳時，建立的是 Template 這個 Resource，而不是它定義的那些 Resource。"}, {"q": "After you upload a template to the shared-templates project, who can use it?", "o": ["Only cluster administrators", "Only the user who uploaded it", "Every user in every project automatically", "Anyone who has access to the shared-templates project"], "a": 3, "e": "上傳後，有該 Project 存取權的人都能使用這個 Template。"}, {"q": "What is Helm?", "o": ["An OpenShift operator that manages cluster updates", "A container registry", "A tool that only renders Kustomize overlays", "An open source application that manages the lifecycle of Kubernetes applications using charts"], "a": 3, "e": "Helm 是開源應用程式，用 Chart 管理 Kubernetes 應用程式的生命週期，包含安裝、升級與回復。"}, {"q": "According to the course, what should you consider for application lifecycles that are more complex than Helm can handle?", "o": ["Operators, which provide a more complete model", "Imperative oc commands", "Kustomize generators", "OpenShift templates"], "a": 0, "e": "Helm 無法涵蓋所有需求，更複雜的應用程式生命週期，Operator 有更完整的模型可以處理。"}, {"q": "Which file in a Helm chart stores metadata such as the chart name and version?", "o": ["templates/NOTES.txt", "values.yaml", "kustomization.yaml", "Chart.yaml"], "a": 3, "e": "Chart.yaml 記錄 Chart 名稱與 Version 等 Metadata；values.yaml 存放預設值；templates 目錄存放 Resource 定義。"}, {"q": "Which file in a Helm chart contains the default values?", "o": ["Chart.yaml", "defaults.env", "release.yaml", "values.yaml"], "a": 3, "e": "values.yaml 存放 Chart 的預設值，Chart Resource 預設使用這些值，你可以覆寫。"}, {"q": "What are chart hooks used for?", "o": ["Defining RBAC roles for Helm", "Connecting a chart repository to the web console", "Running actions at different stages of install and upgrade to automate tasks", "Signing chart packages"], "a": 2, "e": "Chart 可含 Hook，在安裝與升級的不同階段執行，自動化工作；使用前要先閱讀 Chart 文件，了解 Hook 的影響。"}, {"q": "What is a Helm release?", "o": ["The values.yaml file used for the installation", "A Git tag in the chart repository", "A new version of a chart published by its author", "The result of deploying a chart; the same chart can be deployed many times, each as a different release"], "a": 3, "e": "Release 是部署 Chart 的結果，同一 Cluster 可部署同一 Chart 多次，每次都是不同的 Release，需要唯一的名稱。Version 才是 Chart 作者釋出的版本。"}, {"q": "Which command shows general information about a chart, such as maintainers and source URLs?", "o": ["helm list CHART", "helm show chart CHART", "helm history CHART", "helm show values CHART"], "a": 1, "e": "helm show chart 顯示名稱、版本、維護者、來源 URL 等一般資訊；helm show values 則顯示預設值。"}, {"q": "How do you find which values of a chart can be customized?", "o": ["Run helm list --values", "Review the output of helm show values", "Run oc process --parameters on the chart", "Read the Chart.yaml file only"], "a": 1, "e": "helm show values 以 YAML 格式顯示來自 values.yaml 的預設值，從中可找出可自訂的項目。"}, {"q": "Which three decisions does the course say you should make before installing a chart?", "o": ["Target namespace, values to override, and release name", "Chart author, license, and repository URL", "Number of replicas, CPU limit, and route host", "Cluster version, storage class, and node selector"], "a": 0, "e": "安裝前先決定目標 Namespace、要覆寫的值與 Release 名稱，並閱讀 Chart 文件了解先決條件。"}, {"q": "Most application charts do not create a namespace. What should you do before installation?", "o": ["Install the chart in the default namespace", "Create the namespace first so that Helm creates the resources in it", "Run helm create namespace", "Add a namespace field to Chart.yaml"], "a": 1, "e": "多數應用程式 Chart 不建立 Namespace；先建立 Namespace，Helm 再於其中建立 Resource。"}, {"q": "When writing a custom values file to override a chart&#x27;s defaults, what should it contain?", "o": ["A full copy of all default values", "Only the items that you need to change; others keep their defaults", "The rendered Kubernetes manifests", "Only the Chart.yaml fields"], "a": 1, "e": "覆寫值的 YAML 檔只列出需要修改的項目，例如只改 image.tag；沒有列出的仍使用預設值。"}, {"q": "What does &#x27;helm install release-name chart-reference --dry-run --values my-values.yaml&#x27; do?", "o": ["Previews the install, showing release information, the resources that would be created, and notes", "Installs the chart and then deletes it", "Validates only the Chart.yaml syntax", "Upgrades an existing release without confirmation"], "a": 0, "e": "--dry-run 預覽安裝效果，輸出 Release 一般資訊 (STATUS 為 pending-install)、會建立的 Resource 清單與 NOTES；確認後移除 --dry-run 重新執行即正式部署。"}, {"q": "How does Helm store release information in the cluster?", "o": ["As a Secret of type helm.sh/release.v1", "In the Chart.yaml file", "As a ConfigMap named helm-releases", "In an annotation on the namespace"], "a": 0, "e": "Helm 把 Release 資訊存成 helm.sh/release.v1 類型的 Secret。"}, {"q": "What happens if you delete a Helm release Secret?", "o": ["Helm automatically recreates it", "Helm can no longer operate on that release", "The release is upgraded to the latest version", "The release resources are deleted immediately"], "a": 1, "e": "簡報警告不要動 Release 的 Secret；刪除後 Helm 無法再操作該 Release。"}, {"q": "Which command lists releases in all namespaces?", "o": ["helm list --all-namespaces", "helm list -A --charts", "helm search repo --releases", "helm history --all"], "a": 0, "e": "helm list 預設列出目前 Namespace 的 Release，加上 --all-namespaces 可列出全部。"}, {"q": "By default, which chart version does &#x27;helm upgrade&#x27; use?", "o": ["The latest chart version", "The same version as the current release", "The oldest available version", "The version recorded in values.yaml"], "a": 0, "e": "helm upgrade 可更新值或 Chart Version，預設升級到最新的 Chart Version；可用 --version 指定。"}, {"q": "Which command shows the revision history of a release?", "o": ["helm show history RELEASE", "helm status --all", "helm history RELEASE", "helm list --revisions"], "a": 2, "e": "helm history 檢視 Release 的 Revision 記錄，包含每個 Revision 的狀態與 Chart 版本。"}, {"q": "Why does the course warn that a rollback can have a greater impact than an upgrade?", "o": ["Upgrades are not always reversible", "Rollbacks reset the release name", "Rollbacks require cluster-admin", "Rollbacks delete all persistent volumes"], "a": 0, "e": "回復的影響可能比升級更大，因為升級不一定可逆；若有相同升級的測試環境，建議先在測試環境演練回復。"}, {"q": "What effect do &#x27;helm repo&#x27; subcommands such as add, list, update, and remove have?", "o": ["They create HelmChartRepository resources in the cluster", "They change only the local configuration and do not affect cluster resources", "They install charts into the current namespace", "They delete releases from the cluster"], "a": 1, "e": "helm repo 子命令只改變本機設定，不影響 Cluster Resource。"}, {"q": "By default, what does &#x27;helm search repo&#x27; show, and how do you see every version?", "o": ["All versions; add --latest to see the newest", "Only installed charts; add --all to see available ones", "Only the latest version of each chart; add --versions to see all versions", "Only deprecated charts"], "a": 2, "e": "搜尋預設只顯示每個 Chart 的最新版本，加上 --versions 才會列出所有版本。"}, {"q": "A repository added with &#x27;helm repo add&#x27; does not appear in the web console. What is needed?", "o": ["Add the repository to values.yaml", "Restart the console pods", "Run helm repo update", "A cluster administrator must create a HelmChartRepository or ProjectHelmChartRepository custom resource"], "a": 3, "e": "helm repo add 加入的 Repository 只存在本機；要讓 Web Console 看到，需由 Cluster 管理員建立 HelmChartRepository 或 ProjectHelmChartRepository Custom Resource。"}, {"q": "Which URL protocols are supported when installing a Helm chart from a URL in the web console?", "o": ["ftp:// and http://", "file:// only", "https:// and oci://", "git:// and ssh://"], "a": 2, "e": "從 URL 安裝支援 https:// 與 oci:// 兩種協定。"}, {"q": "What is the risk of installing a chart from a URL in the web console?", "o": ["It cannot set custom values", "It requires deleting the existing release", "It bypasses the Software Catalog verification checks, so you should install only trusted URLs", "It always installs the oldest chart version"], "a": 2, "e": "從 URL 直接安裝會略過 Software Catalog 的驗證檢查，只能安裝你信任的來源。"}, {"q": "Which section of the web console Helm release details page shows the installation notes provided by the chart author?", "o": ["Revision History", "Resources", "Release Notes", "Details"], "a": 2, "e": "Release Notes 顯示 Chart 作者提供的安裝說明，類似 helm install 輸出的 NOTES。"}, {"q": "What happens when you uninstall a Helm release from the web console?", "o": ["All resources managed by the release are removed, and the action cannot be undone", "Only the release Secret is removed", "The resources remain but are no longer labeled", "The release is moved to a recycle bin"], "a": 0, "e": "解除安裝會移除 Release 管理的所有 Resource，無法復原；若 Chart 設定為刪除 PersistentVolumeClaim，永久資料也會被刪除。"}, {"q": "If you installed a chart from a URL in the web console, what limitation applies when upgrading?", "o": ["You must uninstall first", "You cannot change the chart version; you can only edit the values", "You must use the CLI", "You cannot edit the values"], "a": 1, "e": "以 URL 安裝的 Chart，升級時無法變更 Chart version，只能編輯值。"}]};</script>
+<script>
+const D=window.QUIZ, L='ABCD', KEY='do280-v422-'+D.id;
+let st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){st={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+const M=document.getElementById('qs');
+D.q.forEach((q,i)=>{
+  const s=document.createElement('section');s.className='q';s.id='q'+(i+1);
+  s.innerHTML=`<h2><span class="n">Q${i+1}.</span><span lang="en">${q.q}</span></h2>
+  <ul class="opts">${q.o.map((o,j)=>`<li><label><input type="radio" name="r${i}" value="${j}"><span class="k">${L[j]}.</span><span lang="en">${o}</span></label></li>`).join('')}</ul>
+  <div class="act"><button class="btn primary show-ans">查看答案與說明</button><span class="badge"></span></div>
+  <div class="ans"><div class="v"></div><p>${q.e}</p></div>`;
+  M.appendChild(s);
+  s.querySelectorAll('input').forEach(r=>r.addEventListener('change',()=>{st[i]={c:+r.value,r:st[i]&&st[i].r};save();paint(i,false)}));
+  s.querySelector('.show-ans').addEventListener('click',()=>{st[i]=st[i]||{};st[i].r=1;save();paint(i,true)});
+});
+function paint(i,scroll){
+  const q=D.q[i],s=document.getElementById('q'+(i+1)),x=st[i]||{};
+  const labels=s.querySelectorAll('label');
+  labels.forEach((lb,j)=>{lb.classList.remove('chosen','right','wrong');lb.querySelector('input').checked=(x.c===j);if(x.c===j)lb.classList.add('chosen')});
+  const a=s.querySelector('.ans'),b=s.querySelector('.badge'),btn=s.querySelector('.show-ans');
+  if(x.r){
+    labels[q.a].classList.add('right');
+    if(x.c!==undefined&&x.c!==q.a)labels[x.c].classList.add('wrong');
+    a.classList.add('show');a.classList.toggle('x',x.c!==undefined&&x.c!==q.a);
+    a.querySelector('.v').textContent=(x.c===undefined?'正確答案：':x.c===q.a?'答對了！正確答案：':'答錯了。正確答案：')+L[q.a]+'. '+strip(q.o[q.a]);
+    b.textContent=x.c===undefined?'未作答':x.c===q.a?'✔ 正確':'✘ 錯誤';b.className='badge '+(x.c===q.a?'ok':x.c===undefined?'':'bad');
+    btn.textContent='隱藏答案';btn.onclick=()=>{st[i].r=0;save();paint(i)};
+  }else{
+    a.classList.remove('show');b.textContent='';btn.textContent='查看答案與說明';
+    btn.onclick=()=>{st[i]=st[i]||{};st[i].r=1;save();paint(i)};
+  }
+  stats();
+}
+function strip(h){const t=document.createElement('div');t.innerHTML=h;return t.textContent}
+function stats(){
+  let done=0,rev=0,ok=0;D.q.forEach((q,i)=>{const x=st[i]||{};if(x.c!==undefined)done++;if(x.r&&x.c!==undefined){rev++;if(x.c===q.a)ok++}});
+  document.getElementById('done').textContent=done;document.getElementById('ok').textContent=ok;document.getElementById('rev').textContent=rev;
+  document.querySelector('.prog i').style.width=(done/D.q.length*100)+'%';
+}
+document.getElementById('checkAll').onclick=()=>{
+  D.q.forEach((q,i)=>{st[i]=st[i]||{};st[i].r=1});save();D.q.forEach((q,i)=>paint(i));
+  let ok=0,un=0;D.q.forEach((q,i)=>{if(st[i].c===undefined)un++;else if(st[i].c===q.a)ok++});
+  const s=document.getElementById('sum');s.classList.add('show');
+  s.innerHTML=`<b>成績：${ok} / ${D.q.length} (${Math.round(ok/D.q.length*100)}%)</b><br>答錯 ${D.q.length-ok-un} 題，未作答 ${un} 題。可按「只看答錯」複習。`;
+  try{const b=JSON.parse(localStorage.getItem('do280-v422-best')||'{}');if(!b[D.id]||ok>b[D.id]){b[D.id]=ok;localStorage.setItem('do280-v422-best',JSON.stringify(b))}}catch(e){}
+  s.scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('reset').onclick=()=>{if(!confirmReset())return;st={};save();document.getElementById('sum').classList.remove('show');filt=0;applyFilter();D.q.forEach((q,i)=>paint(i));window.scrollTo(0,0)};
+let armed=0;function confirmReset(){const b=document.getElementById('reset');if(armed){armed=0;b.textContent='重新作答';return true}armed=1;b.textContent='再按一次確認清除';setTimeout(()=>{armed=0;b.textContent='重新作答'},3000);return false}
+let filt=0;document.getElementById('wrongOnly').onclick=()=>{filt=!filt;applyFilter()};
+function applyFilter(){const b=document.getElementById('wrongOnly');b.textContent=filt?'顯示全部題目':'只看答錯';
+  D.q.forEach((q,i)=>{const x=st[i]||{};const w=x.r&&x.c!==undefined&&x.c!==q.a;document.getElementById('q'+(i+1)).classList.toggle('hide',!!filt&&!w)})}
+D.q.forEach((q,i)=>paint(i));
+</script>
+</body></html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DO280 V4.22 練習題庫</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2430;--mute:#5b6676;--line:#dde2ea;--accent:#c00;--accent2:#8a0000;
+--ok:#1a7f37;--okbg:#e9f6ec;--bad:#c62828;--badbg:#fdecec;--sel:#eef3ff}
+@media (prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2128;--ink:#e6e9ee;--mute:#9aa4b2;--line:#323844;
+--sel:#24304a;--okbg:#16301f;--badbg:#3a1c1c;--ok:#5cc97a;--bad:#ff7b7b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+a{color:var(--accent)}
+header.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+.bar{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+.bar h1{font-size:18px;margin:0;flex:1;min-width:220px;line-height:1.35}
+.bar h1 small{display:block;font-weight:400;color:var(--mute);font-size:13px}
+.stat{font-size:14px;color:var(--mute);white-space:nowrap}
+.stat b{color:var(--ink)}
+.prog{height:4px;background:var(--line)}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.btn:hover{border-color:var(--mute)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0 4px}
+main{padding:8px 0 60px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.q h2{font-size:16px;font-weight:600;margin:0 0 12px;display:flex;gap:10px}
+.q h2 .n{color:var(--accent);flex:none;min-width:2.2em}
+.opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.opts label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
+.opts label:hover{background:var(--sel)}
+.opts input{margin-top:5px;accent-color:var(--accent)}
+.opts .k{font-weight:700;flex:none;width:1.3em}
+.opts label.chosen{background:var(--sel);border-color:#7b93c9}
+.opts label.right{background:var(--okbg);border-color:var(--ok)}
+.opts label.wrong{background:var(--badbg);border-color:var(--bad)}
+.act{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ans{display:none;margin-top:12px;border-left:4px solid var(--ok);background:var(--okbg);padding:10px 14px;border-radius:0 8px 8px 0}
+.ans.show{display:block}
+.ans.x{border-color:var(--bad);background:var(--badbg)}
+.ans .v{font-weight:700;margin-bottom:4px}
+.ans p{margin:4px 0 0}
+.badge{font-size:13px;font-weight:600}
+.badge.ok{color:var(--ok)}.badge.bad{color:var(--bad)}
+.summary{display:none;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:16px 20px;margin:14px 0}
+.summary.show{display:block}
+.hide{display:none!important}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:24px 0 40px}
+/* index */
+.hero{padding:34px 0 10px}.hero h1{margin:0 0 6px;font-size:26px}.hero p{color:var(--mute);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding:20px 0 40px}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .c{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.05em}
+.card h2{font-size:17px;margin:4px 0 2px;line-height:1.35}
+.card p{margin:0;color:var(--mute);font-size:14px}
+.card .best{margin-top:8px;font-size:13px;color:var(--mute)}
+</style></head><body>
+<main><div class="wrap">
+<div class="hero"><h1>DO280 V4.22 練習題庫</h1>
+<p>Red Hat OpenShift Administration II · 每章 50 題英文單選題，答案與說明為中文。</p></div>
+<div class="grid"><a class="card" href="ch01.html"><div class="c">CH01</div><h2 lang="en">Declarative Resource Management</h2><p>宣告式 Resource 管理 · 50 題</p><div class="best" data-id="ch01"></div></a>
+<a class="card" href="ch02.html"><div class="c">CH02</div><h2 lang="en">Deploying Packaged Applications</h2><p>部署封裝應用程式 · 50 題</p><div class="best" data-id="ch02"></div></a>
+<a class="card" href="ch03.html"><div class="c">CH03</div><h2 lang="en">Authentication and Authorization</h2><p>身分驗證與授權 · 50 題</p><div class="best" data-id="ch03"></div></a>
+<a class="card" href="ch04.html"><div class="c">CH04</div><h2 lang="en">Network Security</h2><p>網路安全 · 50 題</p><div class="best" data-id="ch04"></div></a>
+<a class="card" href="ch05.html"><div class="c">CH05</div><h2 lang="en">Exposing Non-HTTP/SNI Applications</h2><p>暴露非 HTTP 與非 SNI 應用程式 · 50 題</p><div class="best" data-id="ch05"></div></a>
+<a class="card" href="ch06.html"><div class="c">CH06</div><h2 lang="en">Enabling Developer Self-service</h2><p>啟用開發者自助服務 · 50 題</p><div class="best" data-id="ch06"></div></a>
+<a class="card" href="ch07.html"><div class="c">CH07</div><h2 lang="en">Managing Kubernetes Operators</h2><p>管理 Kubernetes Operator · 50 題</p><div class="best" data-id="ch07"></div></a>
+<a class="card" href="ch08.html"><div class="c">CH08</div><h2 lang="en">Application Security</h2><p>應用程式安全 · 50 題</p><div class="best" data-id="ch08"></div></a>
+<a class="card" href="ch09.html"><div class="c">CH09</div><h2 lang="en">OpenShift Updates</h2><p>OpenShift 更新 · 50 題</p><div class="best" data-id="ch09"></div></a></div></div></main>
+<footer>作答進度與最佳成績只存在你的瀏覽器</footer>
+<script>try{const b=JSON.parse(localStorage.getItem('do280-v422-best')||'{}');document.querySelectorAll('.best').forEach(e=>{const v=b[e.dataset.id];if(v!==undefined)e.textContent='最佳成績：'+v+' / 50'})}catch(e){}</script>
+</body></html>

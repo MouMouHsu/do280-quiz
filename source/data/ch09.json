@@ -1,0 +1,508 @@
+{
+"id": "ch09",
+"num": "CH09",
+"title": "OpenShift Updates",
+"zh": "OpenShift 更新",
+"q": [
+{
+"q": "Which OpenShift 4 capability lets clusters receive new features, bug fixes, and security patches through a release system based on RHEL CoreOS?",
+"o": [
+"Over-the-Air (OTA) updates",
+"Helm chart upgrades",
+"Kustomize overlays",
+"OLM catalog mirroring"
+],
+"e": "OpenShift 4 以 RHEL CoreOS 提供軟體發布系統，Cluster 可執行 Over-the-Air (OTA) 更新，並以 Rolling Update 降低停機時間。"
+},
+{
+"q": "Where does Red Hat host the cluster images used for OTA updates?",
+"o": [
+"quay.io",
+"registry.redhat.io only",
+"Docker Hub",
+"GitHub Container Registry"
+],
+"e": "Red Hat 在 Hybrid Cloud Console 管理服務，Cluster Image 放在 quay.io。"
+},
+{
+"q": "Can an OTA update skip intermediate versions?",
+"o": [
+"Yes; for example, from 4.22.1 directly to 4.22.3, skipping 4.22.2",
+"No; every z-stream version must be installed",
+"Only on single-node clusters",
+"Only with the candidate channel"
+],
+"e": "OTA 可跳過中間版本，例如從 4.22.1 直接更新到 4.22.3，略過 4.22.2。"
+},
+{
+"q": "How do air-gapped (disconnected) clusters receive updates?",
+"o": [
+"Through an update process that uses a local mirror registry",
+"They cannot be updated",
+"Through OTA with a temporary internet connection only",
+"Through Helm charts"
+],
+"e": "自 4.10 起 OTA 需持續連上網際網路；離線環境改用本機 Mirror Registry 的更新流程。"
+},
+{
+"q": "How is an update channel name composed, for example stable-4.22?",
+"o": [
+"Tier, major version, and minor version",
+"Tier and patch version",
+"Cluster name and version",
+"Region and tier"
+],
+"e": "頻道名稱由層級、主版本與次版本組成，例如 stable-4.22。"
+},
+{
+"q": "Which statement about the candidate channel is correct?",
+"o": [
+"It provides updates for feature acceptance testing, and Red Hat does not support updates that exist only in this channel",
+"It is recommended for production",
+"It receives updates only after SRE validation",
+"It provides only critical security fixes"
+],
+"e": "candidate 提供下一版功能驗收測試的更新，符合品質標準後才提升到 fast 或 stable；Red Hat 不支援只出現在此頻道的更新。"
+},
+{
+"q": "When does the fast channel receive an update?",
+"o": [
+"As soon as the release is declared General Availability",
+"After SRE validation on stable clusters",
+"Only for EUS releases",
+"One month after GA"
+],
+"e": "fast 頻道在版本宣告為 General Availability 後立即提供，Red Hat 提供支援，適合開發與 QA 環境。"
+},
+{
+"q": "Why is the stable channel recommended for production clusters?",
+"o": [
+"Updates arrive only after Red Hat support and SRE teams validate them on fast-channel clusters, and problematic updates are skipped",
+"It updates the fastest",
+"It includes all z-stream versions",
+"It never requires reboots"
+],
+"e": "stable 要等 Red Hat 支援與 SRE 團隊在 fast 頻道的 Cluster 驗證後才提供；fast 頻道的更新有問題會被略過。"
+},
+{
+"q": "Since OpenShift 4.8, which minor versions are Extended Update Support (EUS) releases?",
+"o": [
+"Even-numbered minor versions",
+"Odd-numbered minor versions",
+"Every third minor version",
+"Only the .0 releases"
+],
+"e": "自 4.8 起，偶數次版本為 EUS 版本；進入 EUS 階段前，與 stable 頻道無差異。"
+},
+{
+"q": "What is the typical delay before an update is published to channels, and why?",
+"o": [
+"From a few hours to a day, so Red Hat can evaluate the operational impact",
+"Exactly 30 days, for legal review",
+"No delay",
+"One week, to rebuild images"
+],
+"e": "更新發布的延遲約數小時到一天，讓 Red Hat 有時間評估對 Cluster 的運作影響。"
+},
+{
+"q": "In the scenario where 4.22.3 has a defect, which upgrade is available from 4.22.0 on the stable-4.22 channel?",
+"o": [
+"4.22.1 or 4.22.4, but not 4.22.3",
+"Only 4.22.3",
+"Any z-stream version including 4.22.3",
+"No upgrades"
+],
+"e": "stable 頻道可從 4.22.0 升級到 4.22.1 或 4.22.4；有缺陷的 4.22.3 不可升級。"
+},
+{
+"q": "In the same scenario, which channel can still upgrade to the defective 4.22.3?",
+"o": [
+"candidate-4.22",
+"stable-4.22",
+"fast-4.22",
+"eus-4.22"
+],
+"e": "candidate 頻道可升級所有 z-stream 版本，包含 4.22.3，適合開發與預生產環境。"
+},
+{
+"q": "After switching a 4.22 cluster to the eus-4.22 channel, what updates does it receive?",
+"o": [
+"Only critical bug fixes and security updates until the next EUS release",
+"All new features immediately",
+"Only candidate builds",
+"No updates at all"
+],
+"e": "4.22 為 EUS 版本；切換後只取得重大 Bug 修正與安全性更新，直到下一個 EUS 版本。"
+},
+{
+"q": "Which channel switch does Red Hat recommend to maintain stability and support?",
+"o": [
+"Switch only from stable to fast",
+"Switch from stable to candidate",
+"Switch from fast to candidate",
+"Switch from eus to candidate"
+],
+"e": "只從 stable 切換到 fast；雖可切換到 candidate，但 Red Hat 不建議。"
+},
+{
+"q": "What must an administrator do to upgrade to a new minor version?",
+"o": [
+"Explicitly select the channel for that minor version",
+"Nothing; the cluster moves automatically",
+"Reinstall the cluster",
+"Switch to the candidate channel permanently"
+],
+"e": "升級到新的次版本，需明確選擇該次版本的頻道。"
+},
+{
+"q": "Which command switches the cluster to the fast-4.22 channel?",
+"o": [
+"oc patch clusterversion version --type=\"merge\" --patch '{\"spec\":{\"channel\":\"fast-4.22\"}}'",
+"oc adm upgrade --channel fast-4.22 --force",
+"oc patch subscription cluster -p '{\"spec\":{\"channel\":\"fast-4.22\"}}'",
+"oc edit oauth cluster"
+],
+"e": "以 oc patch 修改 ClusterVersion 資源的 spec.channel；Web Console 則在 Administration → Cluster Settings 的 Details 頁籤按鉛筆圖示。"
+},
+{
+"q": "Why should you pause MachineHealthCheck resources before updating a cluster?",
+"o": [
+"Nodes may be temporarily unavailable during the update and could be judged unhealthy and rebooted",
+"MachineHealthChecks block the CVO",
+"They consume the update bandwidth",
+"They delete the update channel"
+],
+"e": "更新時 Node 可能暫時無法使用，Machine Health Check 可能誤判為不健康而重新開機，因此要先暫停。"
+},
+{
+"q": "Which annotation pauses a MachineHealthCheck?",
+"o": [
+"cluster.x-k8s.io/paused=\"\"",
+"machine.openshift.io/disabled=true",
+"openshift.io/maintenance=true",
+"cluster.x-k8s.io/skip-remediation=yes"
+],
+"e": "在 openshift-machine-api 中為資源加上 cluster.x-k8s.io/paused 註解；更新完成後以 cluster.x-k8s.io/paused- 移除。"
+},
+{
+"q": "For which installation type is pausing MachineHealthChecks unnecessary?",
+"o": [
+"Single-node installations",
+"AWS installations",
+"Clusters on the stable channel",
+"Clusters with EUS"
+],
+"e": "單一 Node 安裝不需要此前置作業。"
+},
+{
+"q": "In the OTA architecture, how does the Cluster Version Operator learn about available updates?",
+"o": [
+"It obtains update status from a Red Hat-hosted watcher that detects new images pushed to Quay",
+"It scans Docker Hub",
+"It reads the OLM catalog",
+"It queries each node's kubelet"
+],
+"e": "Red Hat 託管 Cluster Image 與監看程式，監看程式偵測推送到 Quay 的新 Image，CVO 從監看程式取得更新狀態。"
+},
+{
+"q": "In what order does the CVO update components?",
+"o": [
+"Cluster components through their operators first, then components managed by OLM",
+"OLM components first, then cluster components",
+"All components at the same time",
+"Nodes first, then control plane"
+],
+"e": "CVO 先透過各個 Operator 更新 Cluster 元件，再更新由 OLM 管理的額外元件。"
+},
+{
+"q": "What is the role of the Telemeter component in the update architecture?",
+"o": [
+"It reports anonymized cluster operator status to Red Hat, which uses it to determine update paths",
+"It downloads images to nodes",
+"It approves install plans",
+"It encrypts etcd"
+],
+"e": "Cluster 用 Telemeter 回報各 Cluster Operator 的狀態，資料匿名處理後送回 Red Hat，Red Hat 據此判斷更新路徑並通知管理員。"
+},
+{
+"q": "What does the Machine Config Operator (MCO) do during updates?",
+"o": [
+"Applies the desired machine state to each node and handles rolling upgrades of nodes, using CoreOS Ignition",
+"Updates add-on operators",
+"Approves cluster updates",
+"Manages Helm releases"
+],
+"e": "MCO 將預期的機器狀態套用到每個 Node，並處理 Node 的 Rolling Upgrade，以 CoreOS Ignition 為設定格式。"
+},
+{
+"q": "Starting with 4.22, what happens if a cluster's boot images are older than the minimum supported version?",
+"o": [
+"The MCO sets the Upgradeable condition to False and blocks the update",
+"The cluster updates the boot images automatically on all platforms",
+"The nodes are deleted",
+"Nothing; boot images are never checked"
+],
+"e": "預設更新 Cluster 時不會自動更新 Boot Image；4.22 起若低於最低支援版本，MCO 把 Upgradeable 條件設為 False 並阻擋更新。"
+},
+{
+"q": "Which version corresponds to the minimum supported boot image in the 4.22 boot image skew check?",
+"o": [
+"4.13.0 (RHEL 9.2), when OpenShift moved from RHEL 8 to RHEL 9",
+"4.10.0, when OTA required internet",
+"4.8.0, when EUS started",
+"4.20.0"
+],
+"e": "最低版本對應 4.13.0 (RHEL 9.2)，即 OpenShift 由 RHEL 8 轉為 RHEL 9 的版本。"
+},
+{
+"q": "Which boot image skew enforcement mode is the default on AWS, GCP, Azure, and vSphere?",
+"o": [
+"Automatic",
+"Manual",
+"None",
+"Strict"
+],
+"e": "Automatic 由 MCO 自動管理與追蹤，是 AWS、GCP、Azure 與 vSphere 的預設；Manual 由管理員追蹤；None 停用檢查，Upgradeable 恆為 True。"
+},
+{
+"q": "On which platforms is the boot image skew check not applied?",
+"o": [
+"Single-node OpenShift and bare-metal",
+"AWS and Azure",
+"vSphere and GCP",
+"All cloud platforms"
+],
+"e": "單一 Node OpenShift 與 Bare-metal 平台不套用 Boot Image Skew 檢查。"
+},
+{
+"q": "How are updates triggered on ROSA and OpenShift Dedicated?",
+"o": [
+"From the Hybrid Cloud Console or the rosa or ocm CLI; oc adm upgrade is blocked",
+"With oc adm upgrade like a self-managed cluster",
+"Only by Red Hat support cases",
+"They are never updated"
+],
+"e": "ROSA 與 OpenShift Dedicated 須用 Hybrid Cloud Console、rosa 或 ocm 觸發，受管理服務會阻擋 oc adm upgrade；支援排程維護時段與自動次版本更新。"
+},
+{
+"q": "With ROSA Hosted Control Planes, what version skew is allowed between the control plane and compute nodes?",
+"o": [
+"Up to n-2",
+"No skew is allowed",
+"Up to n-5",
+"Unlimited"
+],
+"e": "ROSA Hosted Control Planes 的 Control Plane 與 Compute Node 可獨立升級，兩者的版本差距最多 n-2。"
+},
+{
+"q": "Which technology manages transactional operating system upgrades on nodes during a cluster update?",
+"o": [
+"rpm-ostree",
+"dnf",
+"yum-cron",
+"Ansible"
+],
+"e": "更新同時更新底層作業系統，以 rpm-ostree 管理交易式升級：Node 拉取新 Image、寫入套件、修改 Bootloader，再以 Rolling Update 重新開機。"
+},
+{
+"q": "Is rolling back an OpenShift cluster to an earlier version supported?",
+"o": [
+"No; if an update cannot complete, contact Red Hat support",
+"Yes, with oc adm upgrade --rollback",
+"Yes, from the web console",
+"Only within the same z-stream"
+],
+"e": "不支援將 Cluster 回復到較早的版本；更新無法完成時，請聯絡 Red Hat 支援。"
+},
+{
+"q": "What should you do with OLM-installed operators before updating the cluster from the CLI?",
+"o": [
+"Update them to versions that are compatible with the target cluster version",
+"Uninstall all of them permanently",
+"Switch them to the candidate channel",
+"Nothing; the CVO updates them"
+],
+"e": "更新前先把所有由 OLM 安裝的 Operator 更新到與目標版本相容的版本。"
+},
+{
+"q": "Which command shows the current channel and the recommended updates?",
+"o": [
+"oc adm upgrade",
+"oc get clusteroperator",
+"oc describe packagemanifest",
+"oc get apirequestcounts"
+],
+"e": "oc adm upgrade 顯示目前版本、頻道與 Recommended updates。"
+},
+{
+"q": "What does Red Hat recommend before updating a business-critical cluster?",
+"o": [
+"Open a support case before the update",
+"Switch to the candidate channel",
+"Delete the kubeadmin user",
+"Disable all NetworkPolicies"
+],
+"e": "Red Hat 建議對關鍵業務 Cluster，更新前先開立支援案件，以便問題發生時快速協助。"
+},
+{
+"q": "Which command starts an update to a specific version?",
+"o": [
+"oc adm upgrade --to=VERSION",
+"oc patch clusterversion --version VERSION",
+"oc adm upgrade --channel VERSION",
+"oc apply -f VERSION"
+],
+"e": "oc adm upgrade --to=VERSION 更新到指定版本；--to-latest=true 更新到最新版本。"
+},
+{
+"q": "How do you know a cluster update has completed when watching clusterversion?",
+"o": [
+"The version shows the target version and PROGRESSING is False",
+"AVAILABLE is False",
+"All pods restart",
+"The channel changes"
+],
+"e": "PROGRESSING 為 False 且版本為目標版本，表示完成；更新期間 Cluster 可能有數秒無法存取，需重新登入。"
+},
+{
+"q": "In the history shown by 'oc describe clusterversion', what state indicates a failed or incomplete update?",
+"o": [
+"Partial",
+"Completed",
+"Pending",
+"Degraded"
+],
+"e": "歷史記錄依日期排序，最新在最前面；成功為 Completed，失敗或未完成為 Partial。"
+},
+{
+"q": "Which Kubernetes version corresponds to OpenShift 4.22?",
+"o": [
+"1.35",
+"1.32",
+"1.33",
+"1.34"
+],
+"e": "4.19 對應 1.32、4.20 對應 1.33、4.21 對應 1.34、4.22 對應 1.35。"
+},
+{
+"q": "What maturity level does an API version such as v1beta1 represent?",
+"o": [
+"Beta, a pre-release feature",
+"Alpha, an experimental feature",
+"Stable, a generally available feature",
+"Deprecated, a removed feature"
+],
+"e": "v1alpha1 為 Alpha (實驗性)、v1beta1 為 Beta (預發布)、v1 為 Stable (正式發布)。"
+},
+{
+"q": "According to the Kubernetes deprecation policy, when is a beta API version removed after the stable version is released?",
+"o": [
+"After at least three Kubernetes releases",
+"Immediately",
+"After exactly one release",
+"Never"
+],
+"e": "發布穩定版本後，Beta 版本會被標示為已棄用，並在至少三個 Kubernetes 版本後移除，確切時程依 API 而異。"
+},
+{
+"q": "What does the API server return when a request uses a removed API version?",
+"o": [
+"An error, because the cluster does not support that API version",
+"A deprecation warning only",
+"The resource converted to the new version",
+"An empty success response"
+],
+"e": "使用已移除的 API 版本會回傳錯誤；使用已棄用的版本則回傳棄用警告，內含目前與建議使用的版本。"
+},
+{
+"q": "Which command identifies workloads that use deprecated API versions and shows the release that removes them?",
+"o": [
+"oc get apirequestcounts",
+"oc api-versions --deprecated",
+"oc adm upgrade --check-apis",
+"oc get events --deprecated"
+],
+"e": "oc get apirequestcounts 的 REMOVEDINRELEASE 欄位顯示移除該 API 的 Kubernetes 版本；沒有使用已棄用 API 時輸出為空。"
+},
+{
+"q": "Which container runtime is the default for new clusters, making runC deprecated in 4.22?",
+"o": [
+"crun",
+"containerd",
+"Docker",
+"CRI-O with kata"
+],
+"e": "新 Cluster 預設為 crun；runC 在 4.20 與 4.21 仍支援，4.22 起已棄用。"
+},
+{
+"q": "Which feature listed in the course is removed in OpenShift 4.22?",
+"o": [
+"Red Hat Marketplace",
+"DeploymentConfig objects",
+"BuildConfig objects",
+"The stable update channel"
+],
+"e": "Red Hat Marketplace 在 4.22 已移除；DeploymentConfig 與 Builds v1/BuildConfig 仍為 Deprecated。"
+},
+{
+"q": "Which alert fires when a workload uses an API that OpenShift will remove in the next release?",
+"o": [
+"APIRemovedInNextReleaseInUse",
+"APIRemovedInNextEUSReleaseInUse",
+"DeprecatedAPIWarning",
+"KubeAPIErrorsHigh"
+],
+"e": "APIRemovedInNextReleaseInUse 針對下一個版本會移除的 API；APIRemovedInNextEUSReleaseInUse 針對下一個 EUS 版本會移除的 API。"
+},
+{
+"q": "When you switch an operator's subscription to a different channel, does the operator update?",
+"o": [
+"Only if a newer version becomes available and the subscription is set to automatic updates",
+"Always, immediately",
+"Never",
+"Only after a cluster update"
+],
+"e": "切換頻道本身不會更新，除非讓較新的版本可用且設為自動更新；切換前先參閱 Operator 文件。"
+},
+{
+"q": "Are operators installed manually with Helm charts or YAML updated by OLM or by cluster updates?",
+"o": [
+"No; they are not managed by OLM and are not updated by cluster updates",
+"Yes, by OLM",
+"Yes, by the CVO",
+"Only if they use the stable channel"
+],
+"e": "以 Helm Chart 或 YAML 手動安裝的 Operator，不會被 OLM 或 Cluster 更新所更新。"
+},
+{
+"q": "In a Subscription status, what is the difference between currentCSV and installedCSV?",
+"o": [
+"currentCSV is the latest version in the channel; installedCSV is the currently installed version",
+"currentCSV is the installed version; installedCSV is the previous version",
+"They are always identical",
+"installedCSV is the catalog image"
+],
+"e": "Subscription 的 currentCSV 為頻道最新版本，installedCSV 為目前版本，installPlanRef 參照 Install Plan。"
+},
+{
+"q": "How does the CVO react when an installed operator is incompatible with the next OpenShift version?",
+"o": [
+"It blocks the cluster update; you must update or uninstall the operator first",
+"It uninstalls the operator automatically",
+"It updates the operator automatically",
+"It ignores the operator"
+],
+"e": "CVO 發現不相容的 Operator 會阻擋 Cluster 更新；先更新到相容版本，若無相容版本則解除安裝，Cluster 更新後再重新安裝。"
+},
+{
+"q": "In RHOCP 4.22, what does OLM v1 use instead of the OLM Classic Subscription and InstallPlan resources?",
+"o": [
+"The ClusterExtension API",
+"The ClusterOperator API",
+"The HelmChartRepository API",
+"The MachineConfig API"
+],
+"e": "OLM v1 為 General Availability，是以 ClusterExtension API 建立的宣告式模型；4.22 的程序僅限 Command-line，可固定版本、定義版本範圍或追蹤頻道。"
+}
+]
+}

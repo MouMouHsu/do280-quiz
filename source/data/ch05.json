@@ -1,0 +1,508 @@
+{
+"id": "ch05",
+"num": "CH05",
+"title": "Exposing Non-HTTP/SNI Applications",
+"zh": "暴露非 HTTP 與非 SNI 應用程式",
+"q": [
+{
+"q": "Which kinds of services can Ingress and Route resources expose?",
+"o": [
+"HTTP services and TLS services that support SNI",
+"Any TCP or UDP service",
+"Only plain HTTP services",
+"Only database services"
+],
+"e": "Ingress 與 Route 使用 HTTP Virtual Hosting，只能暴露 HTTP 與支援 SNI 的 TLS 加密服務，其他協定需要不同的資源。"
+},
+{
+"q": "Why can't Ingress and Route resources expose an SSH or MySQL service?",
+"o": [
+"They rely on HTTP virtual hosting, and these protocols are not HTTP",
+"SSH and MySQL require cluster-admin",
+"Routes cannot use port 22 or 3306 due to quotas",
+"These protocols always require IPv6"
+],
+"e": "SSH、LDAP、MySQL 屬二進位協定，不是 HTTP，無法用 HTTP Virtual Hosting 區分，需改用 NodePort 或 LoadBalancer Service。"
+},
+{
+"q": "Which of these is classified in the course as a text-based protocol that Routes cannot expose?",
+"o": [
+"SMTP",
+"HTTP",
+"HTTPS with SNI",
+"gRPC over HTTP/2 with SNI"
+],
+"e": "簡報把 SMTP、POP3、IMAP 歸類為文字協定，因為不是 HTTP，需要其他資源暴露。"
+},
+{
+"q": "What does the course recommend as the first choice for exposing applications externally?",
+"o": [
+"Use Ingress and Route resources, and use other resources only when the protocol is not HTTP or does not support SNI",
+"Always use LoadBalancer services",
+"Always use NodePort services",
+"Use additional pod networks for all external access"
+],
+"e": "優先使用 Ingress 與 Route；只有在協定不是 HTTP 或不支援 SNI 時，才改用 NodePort 或 LoadBalancer Service。"
+},
+{
+"q": "Which service type is the default and provides a stable address only inside the cluster?",
+"o": [
+"ClusterIP",
+"NodePort",
+"LoadBalancer",
+"ExternalName"
+],
+"e": "ClusterIP 是預設類型，只在 Cluster 內部提供穩定的位址，外部網路無法直接連線。"
+},
+{
+"q": "How do external clients reach a NodePort service?",
+"o": [
+"By connecting to NodeIP:NodePort, because a static port is opened on every node",
+"Through the router's host name",
+"Through an address from a MetalLB pool",
+"Only through a VPN to the pod network"
+],
+"e": "NodePort 在每個 Node 上開啟靜態 Port，外部以 NodeIP:NodePort 存取。"
+},
+{
+"q": "In a cloud environment such as AWS, Azure, IBM Cloud, or GCP, what happens when you create a LoadBalancer service?",
+"o": [
+"The cloud provider creates a load balancer for each service, which incurs cost",
+"All LoadBalancer services share one free load balancer",
+"OpenShift converts it to a NodePort service",
+"The service stays pending until MetalLB is installed"
+],
+"e": "在雲端環境，雲端供應商會為每個 LoadBalancer Service 建立一個 Load Balancer，會產生費用。"
+},
+{
+"q": "In a bare-metal cluster without a cloud provider, what can provide external addresses for LoadBalancer services?",
+"o": [
+"The MetalLB Operator, using an address pool prepared by the administrator",
+"The Ingress Operator",
+"The Cluster Network Operator's default route",
+"The service-ca controller"
+],
+"e": "Bare-metal 環境沒有雲端供應商，位址取自管理員預先準備的位址池，由 MetalLB Operator 提供。"
+},
+{
+"q": "In which environments is MetalLB applicable according to the course?",
+"o": [
+"Bare-metal clusters and clusters running on a hypervisor",
+"Only AWS clusters",
+"Only single-node clusters",
+"Only ROSA clusters"
+],
+"e": "MetalLB 適用於 Bare-metal，以及執行在 Hypervisor 上的 Cluster。"
+},
+{
+"q": "Which custom resources do you create in the metallb-system project to configure MetalLB?",
+"o": [
+"MetalLB, IPAddressPool, and L2Advertisement",
+"LoadBalancer, NodePort, and Route",
+"UserDefinedNetwork and NetworkAttachmentDefinition",
+"IngressController and DNSRecord"
+],
+"e": "在 metallb-system Project 中建立 MetalLB、IPAddressPool 與 L2Advertisement 三種資源。"
+},
+{
+"q": "What does an IPAddressPool resource define?",
+"o": [
+"The range of addresses that can be assigned to services",
+"The pod network CIDR",
+"The DNS servers for the cluster",
+"The list of nodes that run MetalLB speakers"
+],
+"e": "IPAddressPool 定義可分配給 Service 的位址範圍，由管理員預先準備。"
+},
+{
+"q": "Which protocol does MetalLB use in its default layer 2 mode?",
+"o": [
+"ARP",
+"BGP",
+"OSPF",
+"VRRP"
+],
+"e": "Layer 2 模式使用 ARP，為預設模式，設定比較簡單。"
+},
+{
+"q": "Which MetalLB mode uses BGP and requires an AS number?",
+"o": [
+"Layer 3 mode",
+"Layer 2 mode",
+"Passthrough mode",
+"NodePort mode"
+],
+"e": "Layer 3 模式使用 BGP，需要 AS Number，適合有路由設備的網路環境。"
+},
+{
+"q": "What do the two MetalLB modes have in common?",
+"o": [
+"MetalLB assigns external addresses from an address pool; they differ in how the address is advertised",
+"Both use ARP",
+"Both require an AS number",
+"Both work only in the cloud"
+],
+"e": "兩種模式都由 MetalLB 從位址池分配外部位址，差別在於如何把位址通告給外部網路 (ARP 或 BGP)。"
+},
+{
+"q": "Which field in a Service manifest creates a load balancer service?",
+"o": [
+"spec.type: LoadBalancer",
+"spec.loadBalancer: true",
+"metadata.annotations.loadbalancer: enabled",
+"spec.externalTrafficPolicy: LoadBalancer"
+],
+"e": "在 Service 的 type 欄位指定 LoadBalancer 即可建立 LoadBalancer Service。"
+},
+{
+"q": "Which command creates a LoadBalancer service for a Deployment that listens on port 8554?",
+"o": [
+"oc expose deployment/NAME --type LoadBalancer --target-port 8554",
+"oc create route passthrough NAME --port 8554",
+"oc expose svc/NAME --hostname NAME:8554",
+"oc create service clusterip NAME --tcp 8554"
+],
+"e": "oc expose deployment/NAME 搭配 --type LoadBalancer 與 --target-port 建立 LoadBalancer Service。"
+},
+{
+"q": "After creating a LoadBalancer service, the EXTERNAL-IP column shows 'pending'. What does this mean?",
+"o": [
+"An external address has not been assigned yet",
+"The service is misconfigured and will never work",
+"The service is only reachable through a route",
+"The pod is not running"
+],
+"e": "位址尚未分配時，oc get service 的 EXTERNAL-IP 顯示 pending。"
+},
+{
+"q": "Besides 'oc get service', where can you read the load balancer address with JSONPath?",
+"o": [
+".status.loadBalancer.ingress",
+".spec.clusterIP",
+".metadata.annotations.externalIP",
+".spec.ports[0].nodePort"
+],
+"e": "可用 JSONPath 讀取 Service 狀態中的 .status.loadBalancer.ingress。"
+},
+{
+"q": "In the guided exercise, the MetalLB address pool contains two addresses and you create three LoadBalancer services. What happens?",
+"o": [
+"The first two services get external addresses, and the third stays pending",
+"All three services share the two addresses",
+"The third service gets a NodePort address",
+"The creation of the third service fails with an error"
+],
+"e": "位址池只有兩個位址，前兩個 Service 取得外部位址，第三個 Service 的 EXTERNAL-IP 維持 pending。"
+},
+{
+"q": "In the guided exercise, how does the third service obtain an external address?",
+"o": [
+"By deleting another LoadBalancer service, which releases an address",
+"By restarting the MetalLB pods",
+"By converting the service to NodePort",
+"By creating a route"
+],
+"e": "刪除 virtual-rtsp-1 Service 釋放一個位址後，第三個 Service 取得被釋放的位址。"
+},
+{
+"q": "In the guided exercise, which tool checks that the load balancer port accepts connections?",
+"o": [
+"nc with -vz",
+"oc diff",
+"helm test",
+"openssl genrsa"
+],
+"e": "練習以 nc 搭配 -vz 檢查 Port 可連線，再以 VLC 開啟 rtsp 網址驗證影像串流。"
+},
+{
+"q": "What does the pod network provide in Kubernetes?",
+"o": [
+"Network communication between all pods",
+"Stable addresses for services",
+"External access through routes",
+"Storage connectivity"
+],
+"e": "Pod Network 提供所有 Pod 之間的網路通訊；Service Network 則為 Service 提供穩定的位址。"
+},
+{
+"q": "What does the service network provide?",
+"o": [
+"Stable addresses for services that run on pods",
+"Node-to-node storage traffic",
+"Public host names for routes",
+"Additional physical interfaces"
+],
+"e": "Service Network 為執行在 Pod 上的 Service 提供穩定的位址。"
+},
+{
+"q": "Which CNI plug-in connects pods to additional networks inside or outside the cluster?",
+"o": [
+"Multus CNI",
+"Flannel",
+"Calico",
+"Weave"
+],
+"e": "Multus CNI 把 Pod 連接到額外的網路，網路可在 Cluster 內部或外部。"
+},
+{
+"q": "Which operators are listed in the course as related to additional networks?",
+"o": [
+"Kubernetes NMState Operator and SR-IOV Network Operator",
+"Cluster Samples Operator and Ingress Operator",
+"MetalLB Operator and Authentication Operator",
+"OLM and Cluster Version Operator"
+],
+"e": "簡報列出相關 Operator 為 Kubernetes NMState Operator 與 SR-IOV Network Operator。"
+},
+{
+"q": "On ROSA, ARO, and OSD, which attachment types are NOT supported, and what should you use instead?",
+"o": [
+"Bridge, MACVLAN, IPVLAN, and host-device; use a layer 2 UDN instead",
+"UDN and CUDN; use bridge instead",
+"NodePort and LoadBalancer; use routes instead",
+"Layer 2 UDNs; use MACVLAN instead"
+],
+"e": "託管式服務不支援 Bridge、MACVLAN、IPVLAN 與 Host-device 附加，請改用 Layer 2 的 UDN。"
+},
+{
+"q": "Who creates a UserDefinedNetwork (UDN), and what does OVN-Kubernetes create after it?",
+"o": [
+"A project administrator creates it, and OVN-Kubernetes creates a corresponding NAD",
+"A cluster administrator creates it, and OVN-Kubernetes creates a route",
+"Any developer creates it, and Multus deletes the default network",
+"The MetalLB Operator creates it automatically"
+],
+"e": "UDN 由 Project 管理員建立，建立後由 OVN-Kubernetes 建立對應的 NAD。"
+},
+{
+"q": "How does a ClusterUserDefinedNetwork (CUDN) select the namespaces it applies to?",
+"o": [
+"With labels or matchExpressions",
+"With a list of pod names",
+"With node selectors",
+"With route host names"
+],
+"e": "CUDN 由 Cluster 管理員建立，以 Label 或 matchExpressions 選取多個 Namespace。"
+},
+{
+"q": "Which is listed as a benefit of user-defined networks?",
+"o": [
+"Tenant isolation and simpler configuration than NetworkPolicy",
+"Automatic TLS encryption of all traffic",
+"Free cloud load balancers",
+"Unlimited routes per namespace"
+],
+"e": "UDN 的優點包含 Tenant 隔離、設定比 Network Policy 簡單，以及 IP 位址一致。"
+},
+{
+"q": "With user-defined networks, can different namespaces reuse the same subnet?",
+"o": [
+"Yes; IP addresses are consistent and different namespaces can reuse the same subnet",
+"No; every subnet must be unique in the cluster",
+"Only if they are in the same CUDN",
+"Only on bare-metal clusters"
+],
+"e": "簡報指出 UDN 的 IP 位址一致，不同 Namespace 可重複使用相同的子網路。"
+},
+{
+"q": "What happens to pods in a namespace after a primary UDN is created?",
+"o": [
+"They use the UDN as their primary network interface instead of the default network",
+"They keep the default network and ignore the UDN",
+"They lose all network connectivity",
+"They get only a secondary interface"
+],
+"e": "Primary UDN 取代預設網路，成為 Pod 的主要網路介面，因此與預設網路隔離。"
+},
+{
+"q": "What is the difference between a secondary UDN and a primary UDN?",
+"o": [
+"With a secondary UDN, only traffic for that network uses the additional interface",
+"A secondary UDN replaces the default network",
+"A secondary UDN applies to the whole cluster",
+"There is no difference"
+],
+"e": "Secondary UDN 只有該網路的流量走額外介面；Primary UDN 則取代預設網路成為主要介面。"
+},
+{
+"q": "Which label must a namespace have to use a UDN or CUDN as its primary network?",
+"o": [
+"k8s.ovn.org/primary-user-defined-network",
+"k8s.v1.cni.cncf.io/networks",
+"network.openshift.io/policy-group",
+"k8s.ovn.org/open-default-ports"
+],
+"e": "Namespace 必須有 k8s.ovn.org/primary-user-defined-network Label，才能以 UDN 或 CUDN 作為主要網路介面。"
+},
+{
+"q": "When can the primary-user-defined-network label be set on a namespace?",
+"o": [
+"Only when the namespace is created",
+"At any time with oc label",
+"Only after the UDN is created",
+"Only by the MetalLB Operator"
+],
+"e": "簡報強調這個 Label 只能在建立 Namespace 時設定。"
+},
+{
+"q": "A namespace has the primary UDN label but no UDN has been created yet. What happens to pods in it?",
+"o": [
+"They do not start until the UDN is created",
+"They start on the default network",
+"They start with no network interfaces",
+"They are scheduled to other namespaces"
+],
+"e": "UDN 建立之前，Namespace 內的 Pod 不會啟動。"
+},
+{
+"q": "Which topologies does a UDN support?",
+"o": [
+"Layer2 and Layer3",
+"NodePort and ClusterIP",
+"Bridge and MACVLAN",
+"ARP and BGP"
+],
+"e": "UDN 的拓撲有 Layer 2 與 Layer 3；Role 可為 Primary 或 Secondary。"
+},
+{
+"q": "In the UDN example, what does 'ipam: lifecycle: Persistent' indicate?",
+"o": [
+"The address management lifecycle is persistent",
+"The UDN cannot be deleted",
+"Pods use DHCP",
+"The subnet is shared with the default network"
+],
+"e": "範例使用 Layer2 拓撲、Primary 角色、子網路 10.0.0.0/16，位址管理 (IPAM) 的生命週期為 Persistent。"
+},
+{
+"q": "What limitation applies when creating a UDN from the web console (Networking → UserDefinedNetworks)?",
+"o": [
+"Only one UDN can be created per namespace",
+"Only layer 3 topologies are available",
+"The namespace label is added automatically",
+"Only cluster administrators can use it"
+],
+"e": "在 Web Console 建立時，每個 Namespace 只能建立一個 UDN。"
+},
+{
+"q": "Why must a CUDN name be unique?",
+"o": [
+"A NAD with the same name as the CUDN is created in every matching namespace",
+"CUDN names are used as DNS host names",
+"The name is used as the MetalLB pool name",
+"OVN-Kubernetes uses it as the node name"
+],
+"e": "CUDN 建立後，每個符合的 Namespace 都會建立與 CUDN 同名的 NAD，因此名稱必須是唯一的。"
+},
+{
+"q": "Which command lists the NADs that OVN-Kubernetes manages across all namespaces?",
+"o": [
+"oc get net-attach-def -A -l k8s.ovn.org/user-defined-network",
+"oc get udn --all",
+"oc get networkpolicy -A",
+"oc get svc -A -l type=LoadBalancer"
+],
+"e": "以 oc get net-attach-def 搭配 -A 與 Label 選擇器 k8s.ovn.org/user-defined-network，列出 OVN-Kubernetes 管理的 NAD。"
+},
+{
+"q": "What is the purpose of the k8s.ovn.org/open-default-ports annotation?",
+"o": [
+"To open specific ports to the default network",
+"To open all node ports",
+"To enable NodePort services",
+"To disable NetworkPolicy"
+],
+"e": "簡報指出 k8s.ovn.org/open-default-ports Annotation 可對預設網路開放 Port。"
+},
+{
+"q": "Which NAD types are supported according to the course?",
+"o": [
+"host-device, bridge, IPVLAN, and MACVLAN",
+"ClusterIP, NodePort, and LoadBalancer",
+"Layer2 and Layer3 only",
+"edge, passthrough, and reencrypt"
+],
+"e": "NAD 支援 host-device、bridge、IPVLAN 與 MACVLAN 類型。"
+},
+{
+"q": "In a NetworkAttachmentDefinition, what does the config field define?",
+"o": [
+"The CNI configuration, such as type and IPAM",
+"The list of pods to attach",
+"The route host name",
+"The MetalLB address pool"
+],
+"e": "NAD 的 config 欄位定義 CNI 設定，例如 type 與 IPAM。"
+},
+{
+"q": "Which IPAM options does the course mention for a NAD?",
+"o": [
+"dhcp, or static with specified addresses",
+"ARP or BGP",
+"Persistent or Ephemeral only",
+"NodePort or ClusterIP"
+],
+"e": "IPAM 可用 dhcp，或 static 指定位址，例如 172.25.150.140/24。"
+},
+{
+"q": "Besides creating NAD resources, where else can additional networks be defined?",
+"o": [
+"In the Cluster Network Operator configuration with additionalNetworks and rawCNIConfig",
+"In the OAuth custom resource",
+"In a Helm chart's values.yaml only",
+"In the kubeconfig file"
+],
+"e": "也可在 Cluster Network Operator 設定 additionalNetworks 與 rawCNIConfig 來定義額外網路。"
+},
+{
+"q": "Which annotation in a pod template attaches the pod to a NAD?",
+"o": [
+"k8s.v1.cni.cncf.io/networks",
+"k8s.ovn.org/primary-user-defined-network",
+"service.beta.openshift.io/inject-cabundle",
+"metallb.universe.tf/address-pool"
+],
+"e": "在 Pod Template 以 k8s.v1.cni.cncf.io/networks Annotation 指定 NAD 名稱；多個名稱之間不要有空格。"
+},
+{
+"q": "After Multus attaches an additional network, what is the name of the additional interface in the pod?",
+"o": [
+"net1",
+"eth1",
+"ovn-udn1",
+"ens4"
+],
+"e": "Multus 會把額外介面命名為 net1，並記錄於 network-status Annotation；UDN 的介面則是 ovn-udn1。"
+},
+{
+"q": "In the guided exercise, why does database-udn fail to connect to database-nad by its default network address?",
+"o": [
+"database-udn is on an isolated primary UDN, so there is no route to the default network address",
+"database-nad has a NetworkPolicy that denies all traffic",
+"The MetalLB pool is exhausted",
+"The PostgreSQL password is wrong"
+],
+"e": "database-udn 位於 UDN 的 ovn-udn1 介面，與預設網路隔離，所以連 database-nad 的預設網路位址會失敗 (No route to host)。"
+},
+{
+"q": "In the guided exercise, which NAD configuration connects database-nad to the physical network?",
+"o": [
+"host-device type on ens4 with the static address 172.25.150.140/24",
+"bridge type on ens3 with DHCP",
+"MACVLAN type on eth0 with DHCP",
+"Layer2 UDN with subnet 10.0.0.0/16"
+],
+"e": "練習建立 host-device 類型的 NAD，使用 ens4 介面與靜態位址 172.25.150.140/24；ens3 是 Cluster 網路。"
+},
+{
+"q": "In the guided exercise, why does the connection from workstation to the database on the additional network time out while the connection from utility succeeds?",
+"o": [
+"The workstation machine has no access to that physical network",
+"The database pod is not running",
+"The NAD uses DHCP and the address changed",
+"A route blocks the traffic"
+],
+"e": "utility 機器在該實體網路上，所以 psql 連線成功；workstation 無法存取該網路，因此連線逾時。"
+}
+]
+}

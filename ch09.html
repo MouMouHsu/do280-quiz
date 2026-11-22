@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DO280 V4.22 · CH09 OpenShift Updates</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2430;--mute:#5b6676;--line:#dde2ea;--accent:#c00;--accent2:#8a0000;
+--ok:#1a7f37;--okbg:#e9f6ec;--bad:#c62828;--badbg:#fdecec;--sel:#eef3ff}
+@media (prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2128;--ink:#e6e9ee;--mute:#9aa4b2;--line:#323844;
+--sel:#24304a;--okbg:#16301f;--badbg:#3a1c1c;--ok:#5cc97a;--bad:#ff7b7b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+a{color:var(--accent)}
+header.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+.bar{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+.bar h1{font-size:18px;margin:0;flex:1;min-width:220px;line-height:1.35}
+.bar h1 small{display:block;font-weight:400;color:var(--mute);font-size:13px}
+.stat{font-size:14px;color:var(--mute);white-space:nowrap}
+.stat b{color:var(--ink)}
+.prog{height:4px;background:var(--line)}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.btn:hover{border-color:var(--mute)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0 4px}
+main{padding:8px 0 60px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.q h2{font-size:16px;font-weight:600;margin:0 0 12px;display:flex;gap:10px}
+.q h2 .n{color:var(--accent);flex:none;min-width:2.2em}
+.opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.opts label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
+.opts label:hover{background:var(--sel)}
+.opts input{margin-top:5px;accent-color:var(--accent)}
+.opts .k{font-weight:700;flex:none;width:1.3em}
+.opts label.chosen{background:var(--sel);border-color:#7b93c9}
+.opts label.right{background:var(--okbg);border-color:var(--ok)}
+.opts label.wrong{background:var(--badbg);border-color:var(--bad)}
+.act{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ans{display:none;margin-top:12px;border-left:4px solid var(--ok);background:var(--okbg);padding:10px 14px;border-radius:0 8px 8px 0}
+.ans.show{display:block}
+.ans.x{border-color:var(--bad);background:var(--badbg)}
+.ans .v{font-weight:700;margin-bottom:4px}
+.ans p{margin:4px 0 0}
+.badge{font-size:13px;font-weight:600}
+.badge.ok{color:var(--ok)}.badge.bad{color:var(--bad)}
+.summary{display:none;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:16px 20px;margin:14px 0}
+.summary.show{display:block}
+.hide{display:none!important}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:24px 0 40px}
+/* index */
+.hero{padding:34px 0 10px}.hero h1{margin:0 0 6px;font-size:26px}.hero p{color:var(--mute);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding:20px 0 40px}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .c{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.05em}
+.card h2{font-size:17px;margin:4px 0 2px;line-height:1.35}
+.card p{margin:0;color:var(--mute);font-size:14px}
+.card .best{margin-top:8px;font-size:13px;color:var(--mute)}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="bar">
+<h1><span lang="en">CH09 · OpenShift Updates</span><small>OpenShift 更新 · 50 題單選題 · DO280 V4.22</small></h1>
+<span class="stat">已作答 <b id="done">0</b>/50 · 已對答 <b id="rev">0</b> · 答對 <b id="ok">0</b></span>
+</div></div><div class="prog"><i></i></div></header>
+<main><div class="wrap">
+<div class="tools"><a class="btn" href="index.html">← 回章節列表</a>
+<button class="btn primary" id="checkAll">全部對答案並計分</button>
+<button class="btn" id="wrongOnly">只看答錯</button>
+<button class="btn" id="reset">重新作答</button></div>
+<div class="summary" id="sum"></div>
+<div id="qs"></div>
+<div class="tools"><button class="btn primary" onclick="document.getElementById('checkAll').click()">全部對答案並計分</button><a class="btn" href="index.html">← 回章節列表</a></div>
+</div></main>
+<footer>題目依 DO280 V4.22 CH09 簡報內容撰寫 · 作答進度只存在你的瀏覽器</footer>
+<script>window.QUIZ={"id": "ch09", "q": [{"q": "Which OpenShift 4 capability lets clusters receive new features, bug fixes, and security patches through a release system based on RHEL CoreOS?", "o": ["Kustomize overlays", "OLM catalog mirroring", "Helm chart upgrades", "Over-the-Air (OTA) updates"], "a": 3, "e": "OpenShift 4 以 RHEL CoreOS 提供軟體發布系統，Cluster 可執行 Over-the-Air (OTA) 更新，並以 Rolling Update 降低停機時間。"}, {"q": "Where does Red Hat host the cluster images used for OTA updates?", "o": ["registry.redhat.io only", "Docker Hub", "quay.io", "GitHub Container Registry"], "a": 2, "e": "Red Hat 在 Hybrid Cloud Console 管理服務，Cluster Image 放在 quay.io。"}, {"q": "Can an OTA update skip intermediate versions?", "o": ["Only on single-node clusters", "No; every z-stream version must be installed", "Yes; for example, from 4.22.1 directly to 4.22.3, skipping 4.22.2", "Only with the candidate channel"], "a": 2, "e": "OTA 可跳過中間版本，例如從 4.22.1 直接更新到 4.22.3，略過 4.22.2。"}, {"q": "How do air-gapped (disconnected) clusters receive updates?", "o": ["They cannot be updated", "Through an update process that uses a local mirror registry", "Through OTA with a temporary internet connection only", "Through Helm charts"], "a": 1, "e": "自 4.10 起 OTA 需持續連上網際網路；離線環境改用本機 Mirror Registry 的更新流程。"}, {"q": "How is an update channel name composed, for example stable-4.22?", "o": ["Tier, major version, and minor version", "Cluster name and version", "Region and tier", "Tier and patch version"], "a": 0, "e": "頻道名稱由層級、主版本與次版本組成，例如 stable-4.22。"}, {"q": "Which statement about the candidate channel is correct?", "o": ["It provides updates for feature acceptance testing, and Red Hat does not support updates that exist only in this channel", "It provides only critical security fixes", "It receives updates only after SRE validation", "It is recommended for production"], "a": 0, "e": "candidate 提供下一版功能驗收測試的更新，符合品質標準後才提升到 fast 或 stable；Red Hat 不支援只出現在此頻道的更新。"}, {"q": "When does the fast channel receive an update?", "o": ["After SRE validation on stable clusters", "One month after GA", "As soon as the release is declared General Availability", "Only for EUS releases"], "a": 2, "e": "fast 頻道在版本宣告為 General Availability 後立即提供，Red Hat 提供支援，適合開發與 QA 環境。"}, {"q": "Why is the stable channel recommended for production clusters?", "o": ["It updates the fastest", "Updates arrive only after Red Hat support and SRE teams validate them on fast-channel clusters, and problematic updates are skipped", "It never requires reboots", "It includes all z-stream versions"], "a": 1, "e": "stable 要等 Red Hat 支援與 SRE 團隊在 fast 頻道的 Cluster 驗證後才提供；fast 頻道的更新有問題會被略過。"}, {"q": "Since OpenShift 4.8, which minor versions are Extended Update Support (EUS) releases?", "o": ["Odd-numbered minor versions", "Only the .0 releases", "Every third minor version", "Even-numbered minor versions"], "a": 3, "e": "自 4.8 起，偶數次版本為 EUS 版本；進入 EUS 階段前，與 stable 頻道無差異。"}, {"q": "What is the typical delay before an update is published to channels, and why?", "o": ["No delay", "From a few hours to a day, so Red Hat can evaluate the operational impact", "One week, to rebuild images", "Exactly 30 days, for legal review"], "a": 1, "e": "更新發布的延遲約數小時到一天，讓 Red Hat 有時間評估對 Cluster 的運作影響。"}, {"q": "In the scenario where 4.22.3 has a defect, which upgrade is available from 4.22.0 on the stable-4.22 channel?", "o": ["Only 4.22.3", "Any z-stream version including 4.22.3", "No upgrades", "4.22.1 or 4.22.4, but not 4.22.3"], "a": 3, "e": "stable 頻道可從 4.22.0 升級到 4.22.1 或 4.22.4；有缺陷的 4.22.3 不可升級。"}, {"q": "In the same scenario, which channel can still upgrade to the defective 4.22.3?", "o": ["fast-4.22", "stable-4.22", "eus-4.22", "candidate-4.22"], "a": 3, "e": "candidate 頻道可升級所有 z-stream 版本，包含 4.22.3，適合開發與預生產環境。"}, {"q": "After switching a 4.22 cluster to the eus-4.22 channel, what updates does it receive?", "o": ["Only critical bug fixes and security updates until the next EUS release", "Only candidate builds", "All new features immediately", "No updates at all"], "a": 0, "e": "4.22 為 EUS 版本；切換後只取得重大 Bug 修正與安全性更新，直到下一個 EUS 版本。"}, {"q": "Which channel switch does Red Hat recommend to maintain stability and support?", "o": ["Switch from eus to candidate", "Switch from fast to candidate", "Switch only from stable to fast", "Switch from stable to candidate"], "a": 2, "e": "只從 stable 切換到 fast；雖可切換到 candidate，但 Red Hat 不建議。"}, {"q": "What must an administrator do to upgrade to a new minor version?", "o": ["Explicitly select the channel for that minor version", "Nothing; the cluster moves automatically", "Switch to the candidate channel permanently", "Reinstall the cluster"], "a": 0, "e": "升級到新的次版本，需明確選擇該次版本的頻道。"}, {"q": "Which command switches the cluster to the fast-4.22 channel?", "o": ["oc adm upgrade --channel fast-4.22 --force", "oc edit oauth cluster", "oc patch clusterversion version --type=&quot;merge&quot; --patch &#x27;{&quot;spec&quot;:{&quot;channel&quot;:&quot;fast-4.22&quot;}}&#x27;", "oc patch subscription cluster -p &#x27;{&quot;spec&quot;:{&quot;channel&quot;:&quot;fast-4.22&quot;}}&#x27;"], "a": 2, "e": "以 oc patch 修改 ClusterVersion 資源的 spec.channel；Web Console 則在 Administration → Cluster Settings 的 Details 頁籤按鉛筆圖示。"}, {"q": "Why should you pause MachineHealthCheck resources before updating a cluster?", "o": ["Nodes may be temporarily unavailable during the update and could be judged unhealthy and rebooted", "They consume the update bandwidth", "They delete the update channel", "MachineHealthChecks block the CVO"], "a": 0, "e": "更新時 Node 可能暫時無法使用，Machine Health Check 可能誤判為不健康而重新開機，因此要先暫停。"}, {"q": "Which annotation pauses a MachineHealthCheck?", "o": ["machine.openshift.io/disabled=true", "cluster.x-k8s.io/paused=&quot;&quot;", "openshift.io/maintenance=true", "cluster.x-k8s.io/skip-remediation=yes"], "a": 1, "e": "在 openshift-machine-api 中為資源加上 cluster.x-k8s.io/paused 註解；更新完成後以 cluster.x-k8s.io/paused- 移除。"}, {"q": "For which installation type is pausing MachineHealthChecks unnecessary?", "o": ["Clusters with EUS", "Single-node installations", "Clusters on the stable channel", "AWS installations"], "a": 1, "e": "單一 Node 安裝不需要此前置作業。"}, {"q": "In the OTA architecture, how does the Cluster Version Operator learn about available updates?", "o": ["It scans Docker Hub", "It queries each node&#x27;s kubelet", "It reads the OLM catalog", "It obtains update status from a Red Hat-hosted watcher that detects new images pushed to Quay"], "a": 3, "e": "Red Hat 託管 Cluster Image 與監看程式，監看程式偵測推送到 Quay 的新 Image，CVO 從監看程式取得更新狀態。"}, {"q": "In what order does the CVO update components?", "o": ["OLM components first, then cluster components", "Cluster components through their operators first, then components managed by OLM", "All components at the same time", "Nodes first, then control plane"], "a": 1, "e": "CVO 先透過各個 Operator 更新 Cluster 元件，再更新由 OLM 管理的額外元件。"}, {"q": "What is the role of the Telemeter component in the update architecture?", "o": ["It reports anonymized cluster operator status to Red Hat, which uses it to determine update paths", "It encrypts etcd", "It approves install plans", "It downloads images to nodes"], "a": 0, "e": "Cluster 用 Telemeter 回報各 Cluster Operator 的狀態，資料匿名處理後送回 Red Hat，Red Hat 據此判斷更新路徑並通知管理員。"}, {"q": "What does the Machine Config Operator (MCO) do during updates?", "o": ["Manages Helm releases", "Updates add-on operators", "Applies the desired machine state to each node and handles rolling upgrades of nodes, using CoreOS Ignition", "Approves cluster updates"], "a": 2, "e": "MCO 將預期的機器狀態套用到每個 Node，並處理 Node 的 Rolling Upgrade，以 CoreOS Ignition 為設定格式。"}, {"q": "Starting with 4.22, what happens if a cluster&#x27;s boot images are older than the minimum supported version?", "o": ["The nodes are deleted", "The cluster updates the boot images automatically on all platforms", "The MCO sets the Upgradeable condition to False and blocks the update", "Nothing; boot images are never checked"], "a": 2, "e": "預設更新 Cluster 時不會自動更新 Boot Image；4.22 起若低於最低支援版本，MCO 把 Upgradeable 條件設為 False 並阻擋更新。"}, {"q": "Which version corresponds to the minimum supported boot image in the 4.22 boot image skew check?", "o": ["4.10.0, when OTA required internet", "4.20.0", "4.13.0 (RHEL 9.2), when OpenShift moved from RHEL 8 to RHEL 9", "4.8.0, when EUS started"], "a": 2, "e": "最低版本對應 4.13.0 (RHEL 9.2)，即 OpenShift 由 RHEL 8 轉為 RHEL 9 的版本。"}, {"q": "Which boot image skew enforcement mode is the default on AWS, GCP, Azure, and vSphere?", "o": ["Automatic", "Strict", "Manual", "None"], "a": 0, "e": "Automatic 由 MCO 自動管理與追蹤，是 AWS、GCP、Azure 與 vSphere 的預設；Manual 由管理員追蹤；None 停用檢查，Upgradeable 恆為 True。"}, {"q": "On which platforms is the boot image skew check not applied?", "o": ["vSphere and GCP", "Single-node OpenShift and bare-metal", "AWS and Azure", "All cloud platforms"], "a": 1, "e": "單一 Node OpenShift 與 Bare-metal 平台不套用 Boot Image Skew 檢查。"}, {"q": "How are updates triggered on ROSA and OpenShift Dedicated?", "o": ["They are never updated", "Only by Red Hat support cases", "With oc adm upgrade like a self-managed cluster", "From the Hybrid Cloud Console or the rosa or ocm CLI; oc adm upgrade is blocked"], "a": 3, "e": "ROSA 與 OpenShift Dedicated 須用 Hybrid Cloud Console、rosa 或 ocm 觸發，受管理服務會阻擋 oc adm upgrade；支援排程維護時段與自動次版本更新。"}, {"q": "With ROSA Hosted Control Planes, what version skew is allowed between the control plane and compute nodes?", "o": ["No skew is allowed", "Up to n-2", "Up to n-5", "Unlimited"], "a": 1, "e": "ROSA Hosted Control Planes 的 Control Plane 與 Compute Node 可獨立升級，兩者的版本差距最多 n-2。"}, {"q": "Which technology manages transactional operating system upgrades on nodes during a cluster update?", "o": ["yum-cron", "rpm-ostree", "Ansible", "dnf"], "a": 1, "e": "更新同時更新底層作業系統，以 rpm-ostree 管理交易式升級：Node 拉取新 Image、寫入套件、修改 Bootloader，再以 Rolling Update 重新開機。"}, {"q": "Is rolling back an OpenShift cluster to an earlier version supported?", "o": ["No; if an update cannot complete, contact Red Hat support", "Yes, with oc adm upgrade --rollback", "Only within the same z-stream", "Yes, from the web console"], "a": 0, "e": "不支援將 Cluster 回復到較早的版本；更新無法完成時，請聯絡 Red Hat 支援。"}, {"q": "What should you do with OLM-installed operators before updating the cluster from the CLI?", "o": ["Update them to versions that are compatible with the target cluster version", "Nothing; the CVO updates them", "Uninstall all of them permanently", "Switch them to the candidate channel"], "a": 0, "e": "更新前先把所有由 OLM 安裝的 Operator 更新到與目標版本相容的版本。"}, {"q": "Which command shows the current channel and the recommended updates?", "o": ["oc get clusteroperator", "oc adm upgrade", "oc get apirequestcounts", "oc describe packagemanifest"], "a": 1, "e": "oc adm upgrade 顯示目前版本、頻道與 Recommended updates。"}, {"q": "What does Red Hat recommend before updating a business-critical cluster?", "o": ["Switch to the candidate channel", "Delete the kubeadmin user", "Open a support case before the update", "Disable all NetworkPolicies"], "a": 2, "e": "Red Hat 建議對關鍵業務 Cluster，更新前先開立支援案件，以便問題發生時快速協助。"}, {"q": "Which command starts an update to a specific version?", "o": ["oc adm upgrade --to=VERSION", "oc patch clusterversion --version VERSION", "oc adm upgrade --channel VERSION", "oc apply -f VERSION"], "a": 0, "e": "oc adm upgrade --to=VERSION 更新到指定版本；--to-latest=true 更新到最新版本。"}, {"q": "How do you know a cluster update has completed when watching clusterversion?", "o": ["The version shows the target version and PROGRESSING is False", "The channel changes", "AVAILABLE is False", "All pods restart"], "a": 0, "e": "PROGRESSING 為 False 且版本為目標版本，表示完成；更新期間 Cluster 可能有數秒無法存取，需重新登入。"}, {"q": "In the history shown by &#x27;oc describe clusterversion&#x27;, what state indicates a failed or incomplete update?", "o": ["Pending", "Degraded", "Partial", "Completed"], "a": 2, "e": "歷史記錄依日期排序，最新在最前面；成功為 Completed，失敗或未完成為 Partial。"}, {"q": "Which Kubernetes version corresponds to OpenShift 4.22?", "o": ["1.33", "1.32", "1.35", "1.34"], "a": 2, "e": "4.19 對應 1.32、4.20 對應 1.33、4.21 對應 1.34、4.22 對應 1.35。"}, {"q": "What maturity level does an API version such as v1beta1 represent?", "o": ["Alpha, an experimental feature", "Deprecated, a removed feature", "Stable, a generally available feature", "Beta, a pre-release feature"], "a": 3, "e": "v1alpha1 為 Alpha (實驗性)、v1beta1 為 Beta (預發布)、v1 為 Stable (正式發布)。"}, {"q": "According to the Kubernetes deprecation policy, when is a beta API version removed after the stable version is released?", "o": ["After at least three Kubernetes releases", "Immediately", "Never", "After exactly one release"], "a": 0, "e": "發布穩定版本後，Beta 版本會被標示為已棄用，並在至少三個 Kubernetes 版本後移除，確切時程依 API 而異。"}, {"q": "What does the API server return when a request uses a removed API version?", "o": ["An empty success response", "A deprecation warning only", "The resource converted to the new version", "An error, because the cluster does not support that API version"], "a": 3, "e": "使用已移除的 API 版本會回傳錯誤；使用已棄用的版本則回傳棄用警告，內含目前與建議使用的版本。"}, {"q": "Which command identifies workloads that use deprecated API versions and shows the release that removes them?", "o": ["oc adm upgrade --check-apis", "oc get apirequestcounts", "oc api-versions --deprecated", "oc get events --deprecated"], "a": 1, "e": "oc get apirequestcounts 的 REMOVEDINRELEASE 欄位顯示移除該 API 的 Kubernetes 版本；沒有使用已棄用 API 時輸出為空。"}, {"q": "Which container runtime is the default for new clusters, making runC deprecated in 4.22?", "o": ["CRI-O with kata", "crun", "Docker", "containerd"], "a": 1, "e": "新 Cluster 預設為 crun；runC 在 4.20 與 4.21 仍支援，4.22 起已棄用。"}, {"q": "Which feature listed in the course is removed in OpenShift 4.22?", "o": ["BuildConfig objects", "The stable update channel", "DeploymentConfig objects", "Red Hat Marketplace"], "a": 3, "e": "Red Hat Marketplace 在 4.22 已移除；DeploymentConfig 與 Builds v1/BuildConfig 仍為 Deprecated。"}, {"q": "Which alert fires when a workload uses an API that OpenShift will remove in the next release?", "o": ["KubeAPIErrorsHigh", "APIRemovedInNextReleaseInUse", "APIRemovedInNextEUSReleaseInUse", "DeprecatedAPIWarning"], "a": 1, "e": "APIRemovedInNextReleaseInUse 針對下一個版本會移除的 API；APIRemovedInNextEUSReleaseInUse 針對下一個 EUS 版本會移除的 API。"}, {"q": "When you switch an operator&#x27;s subscription to a different channel, does the operator update?", "o": ["Only after a cluster update", "Never", "Always, immediately", "Only if a newer version becomes available and the subscription is set to automatic updates"], "a": 3, "e": "切換頻道本身不會更新，除非讓較新的版本可用且設為自動更新；切換前先參閱 Operator 文件。"}, {"q": "Are operators installed manually with Helm charts or YAML updated by OLM or by cluster updates?", "o": ["Yes, by OLM", "Only if they use the stable channel", "Yes, by the CVO", "No; they are not managed by OLM and are not updated by cluster updates"], "a": 3, "e": "以 Helm Chart 或 YAML 手動安裝的 Operator，不會被 OLM 或 Cluster 更新所更新。"}, {"q": "In a Subscription status, what is the difference between currentCSV and installedCSV?", "o": ["currentCSV is the installed version; installedCSV is the previous version", "installedCSV is the catalog image", "They are always identical", "currentCSV is the latest version in the channel; installedCSV is the currently installed version"], "a": 3, "e": "Subscription 的 currentCSV 為頻道最新版本，installedCSV 為目前版本，installPlanRef 參照 Install Plan。"}, {"q": "How does the CVO react when an installed operator is incompatible with the next OpenShift version?", "o": ["It blocks the cluster update; you must update or uninstall the operator first", "It uninstalls the operator automatically", "It updates the operator automatically", "It ignores the operator"], "a": 0, "e": "CVO 發現不相容的 Operator 會阻擋 Cluster 更新；先更新到相容版本，若無相容版本則解除安裝，Cluster 更新後再重新安裝。"}, {"q": "In RHOCP 4.22, what does OLM v1 use instead of the OLM Classic Subscription and InstallPlan resources?", "o": ["The ClusterOperator API", "The HelmChartRepository API", "The ClusterExtension API", "The MachineConfig API"], "a": 2, "e": "OLM v1 為 General Availability，是以 ClusterExtension API 建立的宣告式模型；4.22 的程序僅限 Command-line，可固定版本、定義版本範圍或追蹤頻道。"}]};</script>
+<script>
+const D=window.QUIZ, L='ABCD', KEY='do280-v422-'+D.id;
+let st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){st={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+const M=document.getElementById('qs');
+D.q.forEach((q,i)=>{
+  const s=document.createElement('section');s.className='q';s.id='q'+(i+1);
+  s.innerHTML=`<h2><span class="n">Q${i+1}.</span><span lang="en">${q.q}</span></h2>
+  <ul class="opts">${q.o.map((o,j)=>`<li><label><input type="radio" name="r${i}" value="${j}"><span class="k">${L[j]}.</span><span lang="en">${o}</span></label></li>`).join('')}</ul>
+  <div class="act"><button class="btn primary show-ans">查看答案與說明</button><span class="badge"></span></div>
+  <div class="ans"><div class="v"></div><p>${q.e}</p></div>`;
+  M.appendChild(s);
+  s.querySelectorAll('input').forEach(r=>r.addEventListener('change',()=>{st[i]={c:+r.value,r:st[i]&&st[i].r};save();paint(i,false)}));
+  s.querySelector('.show-ans').addEventListener('click',()=>{st[i]=st[i]||{};st[i].r=1;save();paint(i,true)});
+});
+function paint(i,scroll){
+  const q=D.q[i],s=document.getElementById('q'+(i+1)),x=st[i]||{};
+  const labels=s.querySelectorAll('label');
+  labels.forEach((lb,j)=>{lb.classList.remove('chosen','right','wrong');lb.querySelector('input').checked=(x.c===j);if(x.c===j)lb.classList.add('chosen')});
+  const a=s.querySelector('.ans'),b=s.querySelector('.badge'),btn=s.querySelector('.show-ans');
+  if(x.r){
+    labels[q.a].classList.add('right');
+    if(x.c!==undefined&&x.c!==q.a)labels[x.c].classList.add('wrong');
+    a.classList.add('show');a.classList.toggle('x',x.c!==undefined&&x.c!==q.a);
+    a.querySelector('.v').textContent=(x.c===undefined?'正確答案：':x.c===q.a?'答對了！正確答案：':'答錯了。正確答案：')+L[q.a]+'. '+strip(q.o[q.a]);
+    b.textContent=x.c===undefined?'未作答':x.c===q.a?'✔ 正確':'✘ 錯誤';b.className='badge '+(x.c===q.a?'ok':x.c===undefined?'':'bad');
+    btn.textContent='隱藏答案';btn.onclick=()=>{st[i].r=0;save();paint(i)};
+  }else{
+    a.classList.remove('show');b.textContent='';btn.textContent='查看答案與說明';
+    btn.onclick=()=>{st[i]=st[i]||{};st[i].r=1;save();paint(i)};
+  }
+  stats();
+}
+function strip(h){const t=document.createElement('div');t.innerHTML=h;return t.textContent}
+function stats(){
+  let done=0,rev=0,ok=0;D.q.forEach((q,i)=>{const x=st[i]||{};if(x.c!==undefined)done++;if(x.r&&x.c!==undefined){rev++;if(x.c===q.a)ok++}});
+  document.getElementById('done').textContent=done;document.getElementById('ok').textContent=ok;document.getElementById('rev').textContent=rev;
+  document.querySelector('.prog i').style.width=(done/D.q.length*100)+'%';
+}
+document.getElementById('checkAll').onclick=()=>{
+  D.q.forEach((q,i)=>{st[i]=st[i]||{};st[i].r=1});save();D.q.forEach((q,i)=>paint(i));
+  let ok=0,un=0;D.q.forEach((q,i)=>{if(st[i].c===undefined)un++;else if(st[i].c===q.a)ok++});
+  const s=document.getElementById('sum');s.classList.add('show');
+  s.innerHTML=`<b>成績：${ok} / ${D.q.length} (${Math.round(ok/D.q.length*100)}%)</b><br>答錯 ${D.q.length-ok-un} 題，未作答 ${un} 題。可按「只看答錯」複習。`;
+  try{const b=JSON.parse(localStorage.getItem('do280-v422-best')||'{}');if(!b[D.id]||ok>b[D.id]){b[D.id]=ok;localStorage.setItem('do280-v422-best',JSON.stringify(b))}}catch(e){}
+  s.scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('reset').onclick=()=>{if(!confirmReset())return;st={};save();document.getElementById('sum').classList.remove('show');filt=0;applyFilter();D.q.forEach((q,i)=>paint(i));window.scrollTo(0,0)};
+let armed=0;function confirmReset(){const b=document.getElementById('reset');if(armed){armed=0;b.textContent='重新作答';return true}armed=1;b.textContent='再按一次確認清除';setTimeout(()=>{armed=0;b.textContent='重新作答'},3000);return false}
+let filt=0;document.getElementById('wrongOnly').onclick=()=>{filt=!filt;applyFilter()};
+function applyFilter(){const b=document.getElementById('wrongOnly');b.textContent=filt?'顯示全部題目':'只看答錯';
+  D.q.forEach((q,i)=>{const x=st[i]||{};const w=x.r&&x.c!==undefined&&x.c!==q.a;document.getElementById('q'+(i+1)).classList.toggle('hide',!!filt&&!w)})}
+D.q.forEach((q,i)=>paint(i));
+</script>
+</body></html>

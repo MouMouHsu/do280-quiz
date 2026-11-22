@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DO280 V4.22 · CH05 Exposing Non-HTTP/SNI Applications</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2430;--mute:#5b6676;--line:#dde2ea;--accent:#c00;--accent2:#8a0000;
+--ok:#1a7f37;--okbg:#e9f6ec;--bad:#c62828;--badbg:#fdecec;--sel:#eef3ff}
+@media (prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2128;--ink:#e6e9ee;--mute:#9aa4b2;--line:#323844;
+--sel:#24304a;--okbg:#16301f;--badbg:#3a1c1c;--ok:#5cc97a;--bad:#ff7b7b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+a{color:var(--accent)}
+header.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+.bar{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+.bar h1{font-size:18px;margin:0;flex:1;min-width:220px;line-height:1.35}
+.bar h1 small{display:block;font-weight:400;color:var(--mute);font-size:13px}
+.stat{font-size:14px;color:var(--mute);white-space:nowrap}
+.stat b{color:var(--ink)}
+.prog{height:4px;background:var(--line)}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.btn:hover{border-color:var(--mute)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0 4px}
+main{padding:8px 0 60px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.q h2{font-size:16px;font-weight:600;margin:0 0 12px;display:flex;gap:10px}
+.q h2 .n{color:var(--accent);flex:none;min-width:2.2em}
+.opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.opts label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
+.opts label:hover{background:var(--sel)}
+.opts input{margin-top:5px;accent-color:var(--accent)}
+.opts .k{font-weight:700;flex:none;width:1.3em}
+.opts label.chosen{background:var(--sel);border-color:#7b93c9}
+.opts label.right{background:var(--okbg);border-color:var(--ok)}
+.opts label.wrong{background:var(--badbg);border-color:var(--bad)}
+.act{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ans{display:none;margin-top:12px;border-left:4px solid var(--ok);background:var(--okbg);padding:10px 14px;border-radius:0 8px 8px 0}
+.ans.show{display:block}
+.ans.x{border-color:var(--bad);background:var(--badbg)}
+.ans .v{font-weight:700;margin-bottom:4px}
+.ans p{margin:4px 0 0}
+.badge{font-size:13px;font-weight:600}
+.badge.ok{color:var(--ok)}.badge.bad{color:var(--bad)}
+.summary{display:none;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:16px 20px;margin:14px 0}
+.summary.show{display:block}
+.hide{display:none!important}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:24px 0 40px}
+/* index */
+.hero{padding:34px 0 10px}.hero h1{margin:0 0 6px;font-size:26px}.hero p{color:var(--mute);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding:20px 0 40px}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .c{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.05em}
+.card h2{font-size:17px;margin:4px 0 2px;line-height:1.35}
+.card p{margin:0;color:var(--mute);font-size:14px}
+.card .best{margin-top:8px;font-size:13px;color:var(--mute)}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="bar">
+<h1><span lang="en">CH05 · Exposing Non-HTTP/SNI Applications</span><small>暴露非 HTTP 與非 SNI 應用程式 · 50 題單選題 · DO280 V4.22</small></h1>
+<span class="stat">已作答 <b id="done">0</b>/50 · 已對答 <b id="rev">0</b> · 答對 <b id="ok">0</b></span>
+</div></div><div class="prog"><i></i></div></header>
+<main><div class="wrap">
+<div class="tools"><a class="btn" href="index.html">← 回章節列表</a>
+<button class="btn primary" id="checkAll">全部對答案並計分</button>
+<button class="btn" id="wrongOnly">只看答錯</button>
+<button class="btn" id="reset">重新作答</button></div>
+<div class="summary" id="sum"></div>
+<div id="qs"></div>
+<div class="tools"><button class="btn primary" onclick="document.getElementById('checkAll').click()">全部對答案並計分</button><a class="btn" href="index.html">← 回章節列表</a></div>
+</div></main>
+<footer>題目依 DO280 V4.22 CH05 簡報內容撰寫 · 作答進度只存在你的瀏覽器</footer>
+<script>window.QUIZ={"id": "ch05", "q": [{"q": "Which kinds of services can Ingress and Route resources expose?", "o": ["Only database services", "Any TCP or UDP service", "HTTP services and TLS services that support SNI", "Only plain HTTP services"], "a": 2, "e": "Ingress 與 Route 使用 HTTP Virtual Hosting，只能暴露 HTTP 與支援 SNI 的 TLS 加密服務，其他協定需要不同的資源。"}, {"q": "Why can&#x27;t Ingress and Route resources expose an SSH or MySQL service?", "o": ["They rely on HTTP virtual hosting, and these protocols are not HTTP", "Routes cannot use port 22 or 3306 due to quotas", "These protocols always require IPv6", "SSH and MySQL require cluster-admin"], "a": 0, "e": "SSH、LDAP、MySQL 屬二進位協定，不是 HTTP，無法用 HTTP Virtual Hosting 區分，需改用 NodePort 或 LoadBalancer Service。"}, {"q": "Which of these is classified in the course as a text-based protocol that Routes cannot expose?", "o": ["SMTP", "gRPC over HTTP/2 with SNI", "HTTP", "HTTPS with SNI"], "a": 0, "e": "簡報把 SMTP、POP3、IMAP 歸類為文字協定，因為不是 HTTP，需要其他資源暴露。"}, {"q": "What does the course recommend as the first choice for exposing applications externally?", "o": ["Always use NodePort services", "Always use LoadBalancer services", "Use additional pod networks for all external access", "Use Ingress and Route resources, and use other resources only when the protocol is not HTTP or does not support SNI"], "a": 3, "e": "優先使用 Ingress 與 Route；只有在協定不是 HTTP 或不支援 SNI 時，才改用 NodePort 或 LoadBalancer Service。"}, {"q": "Which service type is the default and provides a stable address only inside the cluster?", "o": ["NodePort", "ClusterIP", "ExternalName", "LoadBalancer"], "a": 1, "e": "ClusterIP 是預設類型，只在 Cluster 內部提供穩定的位址，外部網路無法直接連線。"}, {"q": "How do external clients reach a NodePort service?", "o": ["By connecting to NodeIP:NodePort, because a static port is opened on every node", "Only through a VPN to the pod network", "Through the router&#x27;s host name", "Through an address from a MetalLB pool"], "a": 0, "e": "NodePort 在每個 Node 上開啟靜態 Port，外部以 NodeIP:NodePort 存取。"}, {"q": "In a cloud environment such as AWS, Azure, IBM Cloud, or GCP, what happens when you create a LoadBalancer service?", "o": ["The service stays pending until MetalLB is installed", "The cloud provider creates a load balancer for each service, which incurs cost", "OpenShift converts it to a NodePort service", "All LoadBalancer services share one free load balancer"], "a": 1, "e": "在雲端環境，雲端供應商會為每個 LoadBalancer Service 建立一個 Load Balancer，會產生費用。"}, {"q": "In a bare-metal cluster without a cloud provider, what can provide external addresses for LoadBalancer services?", "o": ["The Cluster Network Operator&#x27;s default route", "The service-ca controller", "The MetalLB Operator, using an address pool prepared by the administrator", "The Ingress Operator"], "a": 2, "e": "Bare-metal 環境沒有雲端供應商，位址取自管理員預先準備的位址池，由 MetalLB Operator 提供。"}, {"q": "In which environments is MetalLB applicable according to the course?", "o": ["Bare-metal clusters and clusters running on a hypervisor", "Only ROSA clusters", "Only AWS clusters", "Only single-node clusters"], "a": 0, "e": "MetalLB 適用於 Bare-metal，以及執行在 Hypervisor 上的 Cluster。"}, {"q": "Which custom resources do you create in the metallb-system project to configure MetalLB?", "o": ["MetalLB, IPAddressPool, and L2Advertisement", "IngressController and DNSRecord", "UserDefinedNetwork and NetworkAttachmentDefinition", "LoadBalancer, NodePort, and Route"], "a": 0, "e": "在 metallb-system Project 中建立 MetalLB、IPAddressPool 與 L2Advertisement 三種資源。"}, {"q": "What does an IPAddressPool resource define?", "o": ["The DNS servers for the cluster", "The pod network CIDR", "The list of nodes that run MetalLB speakers", "The range of addresses that can be assigned to services"], "a": 3, "e": "IPAddressPool 定義可分配給 Service 的位址範圍，由管理員預先準備。"}, {"q": "Which protocol does MetalLB use in its default layer 2 mode?", "o": ["ARP", "VRRP", "OSPF", "BGP"], "a": 0, "e": "Layer 2 模式使用 ARP，為預設模式，設定比較簡單。"}, {"q": "Which MetalLB mode uses BGP and requires an AS number?", "o": ["Layer 2 mode", "Layer 3 mode", "NodePort mode", "Passthrough mode"], "a": 1, "e": "Layer 3 模式使用 BGP，需要 AS Number，適合有路由設備的網路環境。"}, {"q": "What do the two MetalLB modes have in common?", "o": ["Both use ARP", "MetalLB assigns external addresses from an address pool; they differ in how the address is advertised", "Both work only in the cloud", "Both require an AS number"], "a": 1, "e": "兩種模式都由 MetalLB 從位址池分配外部位址，差別在於如何把位址通告給外部網路 (ARP 或 BGP)。"}, {"q": "Which field in a Service manifest creates a load balancer service?", "o": ["spec.loadBalancer: true", "spec.externalTrafficPolicy: LoadBalancer", "metadata.annotations.loadbalancer: enabled", "spec.type: LoadBalancer"], "a": 3, "e": "在 Service 的 type 欄位指定 LoadBalancer 即可建立 LoadBalancer Service。"}, {"q": "Which command creates a LoadBalancer service for a Deployment that listens on port 8554?", "o": ["oc create route passthrough NAME --port 8554", "oc create service clusterip NAME --tcp 8554", "oc expose deployment/NAME --type LoadBalancer --target-port 8554", "oc expose svc/NAME --hostname NAME:8554"], "a": 2, "e": "oc expose deployment/NAME 搭配 --type LoadBalancer 與 --target-port 建立 LoadBalancer Service。"}, {"q": "After creating a LoadBalancer service, the EXTERNAL-IP column shows &#x27;pending&#x27;. What does this mean?", "o": ["The service is misconfigured and will never work", "An external address has not been assigned yet", "The pod is not running", "The service is only reachable through a route"], "a": 1, "e": "位址尚未分配時，oc get service 的 EXTERNAL-IP 顯示 pending。"}, {"q": "Besides &#x27;oc get service&#x27;, where can you read the load balancer address with JSONPath?", "o": [".spec.clusterIP", ".spec.ports[0].nodePort", ".metadata.annotations.externalIP", ".status.loadBalancer.ingress"], "a": 3, "e": "可用 JSONPath 讀取 Service 狀態中的 .status.loadBalancer.ingress。"}, {"q": "In the guided exercise, the MetalLB address pool contains two addresses and you create three LoadBalancer services. What happens?", "o": ["All three services share the two addresses", "The first two services get external addresses, and the third stays pending", "The creation of the third service fails with an error", "The third service gets a NodePort address"], "a": 1, "e": "位址池只有兩個位址，前兩個 Service 取得外部位址，第三個 Service 的 EXTERNAL-IP 維持 pending。"}, {"q": "In the guided exercise, how does the third service obtain an external address?", "o": ["By converting the service to NodePort", "By restarting the MetalLB pods", "By creating a route", "By deleting another LoadBalancer service, which releases an address"], "a": 3, "e": "刪除 virtual-rtsp-1 Service 釋放一個位址後，第三個 Service 取得被釋放的位址。"}, {"q": "In the guided exercise, which tool checks that the load balancer port accepts connections?", "o": ["openssl genrsa", "helm test", "nc with -vz", "oc diff"], "a": 2, "e": "練習以 nc 搭配 -vz 檢查 Port 可連線，再以 VLC 開啟 rtsp 網址驗證影像串流。"}, {"q": "What does the pod network provide in Kubernetes?", "o": ["External access through routes", "Network communication between all pods", "Stable addresses for services", "Storage connectivity"], "a": 1, "e": "Pod Network 提供所有 Pod 之間的網路通訊；Service Network 則為 Service 提供穩定的位址。"}, {"q": "What does the service network provide?", "o": ["Public host names for routes", "Node-to-node storage traffic", "Stable addresses for services that run on pods", "Additional physical interfaces"], "a": 2, "e": "Service Network 為執行在 Pod 上的 Service 提供穩定的位址。"}, {"q": "Which CNI plug-in connects pods to additional networks inside or outside the cluster?", "o": ["Flannel", "Multus CNI", "Calico", "Weave"], "a": 1, "e": "Multus CNI 把 Pod 連接到額外的網路，網路可在 Cluster 內部或外部。"}, {"q": "Which operators are listed in the course as related to additional networks?", "o": ["Cluster Samples Operator and Ingress Operator", "MetalLB Operator and Authentication Operator", "OLM and Cluster Version Operator", "Kubernetes NMState Operator and SR-IOV Network Operator"], "a": 3, "e": "簡報列出相關 Operator 為 Kubernetes NMState Operator 與 SR-IOV Network Operator。"}, {"q": "On ROSA, ARO, and OSD, which attachment types are NOT supported, and what should you use instead?", "o": ["Layer 2 UDNs; use MACVLAN instead", "UDN and CUDN; use bridge instead", "NodePort and LoadBalancer; use routes instead", "Bridge, MACVLAN, IPVLAN, and host-device; use a layer 2 UDN instead"], "a": 3, "e": "託管式服務不支援 Bridge、MACVLAN、IPVLAN 與 Host-device 附加，請改用 Layer 2 的 UDN。"}, {"q": "Who creates a UserDefinedNetwork (UDN), and what does OVN-Kubernetes create after it?", "o": ["A cluster administrator creates it, and OVN-Kubernetes creates a route", "A project administrator creates it, and OVN-Kubernetes creates a corresponding NAD", "The MetalLB Operator creates it automatically", "Any developer creates it, and Multus deletes the default network"], "a": 1, "e": "UDN 由 Project 管理員建立，建立後由 OVN-Kubernetes 建立對應的 NAD。"}, {"q": "How does a ClusterUserDefinedNetwork (CUDN) select the namespaces it applies to?", "o": ["With labels or matchExpressions", "With route host names", "With node selectors", "With a list of pod names"], "a": 0, "e": "CUDN 由 Cluster 管理員建立，以 Label 或 matchExpressions 選取多個 Namespace。"}, {"q": "Which is listed as a benefit of user-defined networks?", "o": ["Unlimited routes per namespace", "Tenant isolation and simpler configuration than NetworkPolicy", "Free cloud load balancers", "Automatic TLS encryption of all traffic"], "a": 1, "e": "UDN 的優點包含 Tenant 隔離、設定比 Network Policy 簡單，以及 IP 位址一致。"}, {"q": "With user-defined networks, can different namespaces reuse the same subnet?", "o": ["Only on bare-metal clusters", "Yes; IP addresses are consistent and different namespaces can reuse the same subnet", "No; every subnet must be unique in the cluster", "Only if they are in the same CUDN"], "a": 1, "e": "簡報指出 UDN 的 IP 位址一致，不同 Namespace 可重複使用相同的子網路。"}, {"q": "What happens to pods in a namespace after a primary UDN is created?", "o": ["They keep the default network and ignore the UDN", "They lose all network connectivity", "They use the UDN as their primary network interface instead of the default network", "They get only a secondary interface"], "a": 2, "e": "Primary UDN 取代預設網路，成為 Pod 的主要網路介面，因此與預設網路隔離。"}, {"q": "What is the difference between a secondary UDN and a primary UDN?", "o": ["With a secondary UDN, only traffic for that network uses the additional interface", "A secondary UDN replaces the default network", "A secondary UDN applies to the whole cluster", "There is no difference"], "a": 0, "e": "Secondary UDN 只有該網路的流量走額外介面；Primary UDN 則取代預設網路成為主要介面。"}, {"q": "Which label must a namespace have to use a UDN or CUDN as its primary network?", "o": ["k8s.v1.cni.cncf.io/networks", "k8s.ovn.org/open-default-ports", "network.openshift.io/policy-group", "k8s.ovn.org/primary-user-defined-network"], "a": 3, "e": "Namespace 必須有 k8s.ovn.org/primary-user-defined-network Label，才能以 UDN 或 CUDN 作為主要網路介面。"}, {"q": "When can the primary-user-defined-network label be set on a namespace?", "o": ["At any time with oc label", "Only after the UDN is created", "Only when the namespace is created", "Only by the MetalLB Operator"], "a": 2, "e": "簡報強調這個 Label 只能在建立 Namespace 時設定。"}, {"q": "A namespace has the primary UDN label but no UDN has been created yet. What happens to pods in it?", "o": ["They do not start until the UDN is created", "They are scheduled to other namespaces", "They start with no network interfaces", "They start on the default network"], "a": 0, "e": "UDN 建立之前，Namespace 內的 Pod 不會啟動。"}, {"q": "Which topologies does a UDN support?", "o": ["Layer2 and Layer3", "Bridge and MACVLAN", "NodePort and ClusterIP", "ARP and BGP"], "a": 0, "e": "UDN 的拓撲有 Layer 2 與 Layer 3；Role 可為 Primary 或 Secondary。"}, {"q": "In the UDN example, what does &#x27;ipam: lifecycle: Persistent&#x27; indicate?", "o": ["Pods use DHCP", "The UDN cannot be deleted", "The subnet is shared with the default network", "The address management lifecycle is persistent"], "a": 3, "e": "範例使用 Layer2 拓撲、Primary 角色、子網路 10.0.0.0/16，位址管理 (IPAM) 的生命週期為 Persistent。"}, {"q": "What limitation applies when creating a UDN from the web console (Networking → UserDefinedNetworks)?", "o": ["Only layer 3 topologies are available", "The namespace label is added automatically", "Only one UDN can be created per namespace", "Only cluster administrators can use it"], "a": 2, "e": "在 Web Console 建立時，每個 Namespace 只能建立一個 UDN。"}, {"q": "Why must a CUDN name be unique?", "o": ["The name is used as the MetalLB pool name", "OVN-Kubernetes uses it as the node name", "CUDN names are used as DNS host names", "A NAD with the same name as the CUDN is created in every matching namespace"], "a": 3, "e": "CUDN 建立後，每個符合的 Namespace 都會建立與 CUDN 同名的 NAD，因此名稱必須是唯一的。"}, {"q": "Which command lists the NADs that OVN-Kubernetes manages across all namespaces?", "o": ["oc get net-attach-def -A -l k8s.ovn.org/user-defined-network", "oc get networkpolicy -A", "oc get udn --all", "oc get svc -A -l type=LoadBalancer"], "a": 0, "e": "以 oc get net-attach-def 搭配 -A 與 Label 選擇器 k8s.ovn.org/user-defined-network，列出 OVN-Kubernetes 管理的 NAD。"}, {"q": "What is the purpose of the k8s.ovn.org/open-default-ports annotation?", "o": ["To open specific ports to the default network", "To disable NetworkPolicy", "To enable NodePort services", "To open all node ports"], "a": 0, "e": "簡報指出 k8s.ovn.org/open-default-ports Annotation 可對預設網路開放 Port。"}, {"q": "Which NAD types are supported according to the course?", "o": ["edge, passthrough, and reencrypt", "host-device, bridge, IPVLAN, and MACVLAN", "Layer2 and Layer3 only", "ClusterIP, NodePort, and LoadBalancer"], "a": 1, "e": "NAD 支援 host-device、bridge、IPVLAN 與 MACVLAN 類型。"}, {"q": "In a NetworkAttachmentDefinition, what does the config field define?", "o": ["The list of pods to attach", "The MetalLB address pool", "The CNI configuration, such as type and IPAM", "The route host name"], "a": 2, "e": "NAD 的 config 欄位定義 CNI 設定，例如 type 與 IPAM。"}, {"q": "Which IPAM options does the course mention for a NAD?", "o": ["dhcp, or static with specified addresses", "ARP or BGP", "NodePort or ClusterIP", "Persistent or Ephemeral only"], "a": 0, "e": "IPAM 可用 dhcp，或 static 指定位址，例如 172.25.150.140/24。"}, {"q": "Besides creating NAD resources, where else can additional networks be defined?", "o": ["In the OAuth custom resource", "In a Helm chart&#x27;s values.yaml only", "In the Cluster Network Operator configuration with additionalNetworks and rawCNIConfig", "In the kubeconfig file"], "a": 2, "e": "也可在 Cluster Network Operator 設定 additionalNetworks 與 rawCNIConfig 來定義額外網路。"}, {"q": "Which annotation in a pod template attaches the pod to a NAD?", "o": ["service.beta.openshift.io/inject-cabundle", "k8s.ovn.org/primary-user-defined-network", "k8s.v1.cni.cncf.io/networks", "metallb.universe.tf/address-pool"], "a": 2, "e": "在 Pod Template 以 k8s.v1.cni.cncf.io/networks Annotation 指定 NAD 名稱；多個名稱之間不要有空格。"}, {"q": "After Multus attaches an additional network, what is the name of the additional interface in the pod?", "o": ["eth1", "ens4", "net1", "ovn-udn1"], "a": 2, "e": "Multus 會把額外介面命名為 net1，並記錄於 network-status Annotation；UDN 的介面則是 ovn-udn1。"}, {"q": "In the guided exercise, why does database-udn fail to connect to database-nad by its default network address?", "o": ["database-nad has a NetworkPolicy that denies all traffic", "The PostgreSQL password is wrong", "The MetalLB pool is exhausted", "database-udn is on an isolated primary UDN, so there is no route to the default network address"], "a": 3, "e": "database-udn 位於 UDN 的 ovn-udn1 介面，與預設網路隔離，所以連 database-nad 的預設網路位址會失敗 (No route to host)。"}, {"q": "In the guided exercise, which NAD configuration connects database-nad to the physical network?", "o": ["MACVLAN type on eth0 with DHCP", "Layer2 UDN with subnet 10.0.0.0/16", "bridge type on ens3 with DHCP", "host-device type on ens4 with the static address 172.25.150.140/24"], "a": 3, "e": "練習建立 host-device 類型的 NAD，使用 ens4 介面與靜態位址 172.25.150.140/24；ens3 是 Cluster 網路。"}, {"q": "In the guided exercise, why does the connection from workstation to the database on the additional network time out while the connection from utility succeeds?", "o": ["The NAD uses DHCP and the address changed", "The workstation machine has no access to that physical network", "A route blocks the traffic", "The database pod is not running"], "a": 1, "e": "utility 機器在該實體網路上，所以 psql 連線成功；workstation 無法存取該網路，因此連線逾時。"}]};</script>
+<script>
+const D=window.QUIZ, L='ABCD', KEY='do280-v422-'+D.id;
+let st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){st={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+const M=document.getElementById('qs');
+D.q.forEach((q,i)=>{
+  const s=document.createElement('section');s.className='q';s.id='q'+(i+1);
+  s.innerHTML=`<h2><span class="n">Q${i+1}.</span><span lang="en">${q.q}</span></h2>
+  <ul class="opts">${q.o.map((o,j)=>`<li><label><input type="radio" name="r${i}" value="${j}"><span class="k">${L[j]}.</span><span lang="en">${o}</span></label></li>`).join('')}</ul>
+  <div class="act"><button class="btn primary show-ans">查看答案與說明</button><span class="badge"></span></div>
+  <div class="ans"><div class="v"></div><p>${q.e}</p></div>`;
+  M.appendChild(s);
+  s.querySelectorAll('input').forEach(r=>r.addEventListener('change',()=>{st[i]={c:+r.value,r:st[i]&&st[i].r};save();paint(i,false)}));
+  s.querySelector('.show-ans').addEventListener('click',()=>{st[i]=st[i]||{};st[i].r=1;save();paint(i,true)});
+});
+function paint(i,scroll){
+  const q=D.q[i],s=document.getElementById('q'+(i+1)),x=st[i]||{};
+  const labels=s.querySelectorAll('label');
+  labels.forEach((lb,j)=>{lb.classList.remove('chosen','right','wrong');lb.querySelector('input').checked=(x.c===j);if(x.c===j)lb.classList.add('chosen')});
+  const a=s.querySelector('.ans'),b=s.querySelector('.badge'),btn=s.querySelector('.show-ans');
+  if(x.r){
+    labels[q.a].classList.add('right');
+    if(x.c!==undefined&&x.c!==q.a)labels[x.c].classList.add('wrong');
+    a.classList.add('show');a.classList.toggle('x',x.c!==undefined&&x.c!==q.a);
+    a.querySelector('.v').textContent=(x.c===undefined?'正確答案：':x.c===q.a?'答對了！正確答案：':'答錯了。正確答案：')+L[q.a]+'. '+strip(q.o[q.a]);
+    b.textContent=x.c===undefined?'未作答':x.c===q.a?'✔ 正確':'✘ 錯誤';b.className='badge '+(x.c===q.a?'ok':x.c===undefined?'':'bad');
+    btn.textContent='隱藏答案';btn.onclick=()=>{st[i].r=0;save();paint(i)};
+  }else{
+    a.classList.remove('show');b.textContent='';btn.textContent='查看答案與說明';
+    btn.onclick=()=>{st[i]=st[i]||{};st[i].r=1;save();paint(i)};
+  }
+  stats();
+}
+function strip(h){const t=document.createElement('div');t.innerHTML=h;return t.textContent}
+function stats(){
+  let done=0,rev=0,ok=0;D.q.forEach((q,i)=>{const x=st[i]||{};if(x.c!==undefined)done++;if(x.r&&x.c!==undefined){rev++;if(x.c===q.a)ok++}});
+  document.getElementById('done').textContent=done;document.getElementById('ok').textContent=ok;document.getElementById('rev').textContent=rev;
+  document.querySelector('.prog i').style.width=(done/D.q.length*100)+'%';
+}
+document.getElementById('checkAll').onclick=()=>{
+  D.q.forEach((q,i)=>{st[i]=st[i]||{};st[i].r=1});save();D.q.forEach((q,i)=>paint(i));
+  let ok=0,un=0;D.q.forEach((q,i)=>{if(st[i].c===undefined)un++;else if(st[i].c===q.a)ok++});
+  const s=document.getElementById('sum');s.classList.add('show');
+  s.innerHTML=`<b>成績：${ok} / ${D.q.length} (${Math.round(ok/D.q.length*100)}%)</b><br>答錯 ${D.q.length-ok-un} 題，未作答 ${un} 題。可按「只看答錯」複習。`;
+  try{const b=JSON.parse(localStorage.getItem('do280-v422-best')||'{}');if(!b[D.id]||ok>b[D.id]){b[D.id]=ok;localStorage.setItem('do280-v422-best',JSON.stringify(b))}}catch(e){}
+  s.scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('reset').onclick=()=>{if(!confirmReset())return;st={};save();document.getElementById('sum').classList.remove('show');filt=0;applyFilter();D.q.forEach((q,i)=>paint(i));window.scrollTo(0,0)};
+let armed=0;function confirmReset(){const b=document.getElementById('reset');if(armed){armed=0;b.textContent='重新作答';return true}armed=1;b.textContent='再按一次確認清除';setTimeout(()=>{armed=0;b.textContent='重新作答'},3000);return false}
+let filt=0;document.getElementById('wrongOnly').onclick=()=>{filt=!filt;applyFilter()};
+function applyFilter(){const b=document.getElementById('wrongOnly');b.textContent=filt?'顯示全部題目':'只看答錯';
+  D.q.forEach((q,i)=>{const x=st[i]||{};const w=x.r&&x.c!==undefined&&x.c!==q.a;document.getElementById('q'+(i+1)).classList.toggle('hide',!!filt&&!w)})}
+D.q.forEach((q,i)=>paint(i));
+</script>
+</body></html>
