@@ -1,4 +1,4 @@
-# DO280 V4.22 練習題庫
+# OCP - DO280 Quiz
 
 Red Hat OpenShift Administration II (DO280) V4.22 各章練習題：每章 50 題英文單選題，提供「查看答案與說明」(中文)、全部計分、只看答錯與重新作答。
 
